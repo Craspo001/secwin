@@ -1,0 +1,36 @@
+name: arjun
+version: "2.2.1"
+description: "HTTP parameter discovery suite"
+category: fuzzing
+homepage: "https://github.com/s0md3v/Arjun"
+repository: "https://github.com/s0md3v/Arjun"
+license: "GPL-3.0"
+tags: ["parameter-discovery", "http", "fuzzing", "api"]
+aliases: ["arjun"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64]
+    source: "https://github.com/s0md3v/Arjun/releases/download/v2.2.1/arjun_windows_amd64.zip"
+    binary_name: "arjun.exe"
+    extract_path: "."
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "s0md3v/Arjun"
+    version: "v2.2.1"
+    extract_path: "Arjun-2.2.1"
+    binary_name: "arjun.py"
+    pre_commands:
+      - "pip install -r requirements.txt"
+  - method: wsl
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "2.2.1"
+post_install:
+  verify_command: "python arjun.py --version"

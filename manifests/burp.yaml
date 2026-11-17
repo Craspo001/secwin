@@ -1,0 +1,32 @@
+name: burp
+version: "2024.5.0"
+description: "Web application security testing platform"
+category: web
+homepage: "https://portswigger.net/burp"
+repository: "https://github.com/PortSwigger/burp-extensions"
+license: "Proprietary"
+tags: ["web-proxy", "scanner", "intruder", "repeater", "sequencer", "decoder", "comparer", "extender"]
+aliases: ["burpsuite"]
+wsl_preferred: false
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64]
+    source: "https://portswigger.net/burp/releases/download?product=community&version=2024.5.0&type=WindowsX64"
+    binary_name: "burpsuite_community.exe"
+    extract_path: "."
+  - method: scoop
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "burp-suite-community"
+    version: "2024.5.0"
+  - method: chocolatey
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64]
+    source: "burp-suite-free-edition"
+    version: "2024.5.0"
+post_install:
+  verify_command: "burpsuite_community --version"

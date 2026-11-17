@@ -1,0 +1,33 @@
+name: seclists
+version: "2024.1"
+description: "Collection of multiple types of lists used during security assessments"
+category: utilities
+homepage: "https://github.com/danielmiessler/SecLists"
+repository: "https://github.com/danielmiessler/SecLists"
+license: "MIT"
+tags: ["wordlists", "usernames", "passwords", "urls", "payloads", "fuzzing"]
+aliases: ["seclists"]
+install_methods:
+  - method: github
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "danielmiessler/SecLists"
+    version: "2024.1"
+    extract_path: "SecLists-2024.1"
+    binary_name: "."
+    pre_commands: []
+  - method: script
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    script: |
+      $url = "https://github.com/danielmiessler/SecLists/archive/refs/heads/master.zip"
+      $out = "$env:TOOL_DIR\seclists-master.zip"
+      Invoke-WebRequest -Uri $url -OutFile $out
+      Expand-Archive -Path $out -DestinationPath "$env:TOOL_DIR" -Force
+      Move-Item "$env:TOOL_DIR\SecLists-master\*" "$env:TOOL_DIR" -Force
+      Remove-Item "$env:TOOL_DIR\SecLists-master" -Recurse -Force
+      Remove-Item $out
+post_install:
+  verify_command: "dir \"$env:TOOL_DIR\Passwords\""

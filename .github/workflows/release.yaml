@@ -1,0 +1,123 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  GO_VERSION: '1.22'
+
+jobs:
+  build:
+    name: Build Release Binaries
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        arch: [amd64, arm64]
+        exclude:
+          - os: windows-latest
+            arch: arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Build
+        run: |
+          VERSION=${{ github.ref_name }}
+          COMMIT=${{ github.sha }}
+          BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          LDFLAGS="-s -w -X main.version=$VERSION -X main.commit=$COMMIT -X main.buildTime=$BUILD_TIME"
+          GOOS=${{ matrix.os == 'windows-latest' && 'windows' || 'linux' }} \
+          GOARCH=${{ matrix.arch }} \
+          go build -ldflags="$LDFLAGS" -o bin/secwin_${{ matrix.os }}_${{ matrix.arch }}${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./cmd/secwin
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: secwin-${{ matrix.os }}-${{ matrix.arch }}
+          path: bin/secwin_*
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release
+          merge-multiple: true
+      - name: Generate checksums
+        run: |
+          cd release
+          sha256sum secwin_* > checksums.txt
+          cat checksums.txt
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/secwin_*
+            release/checksums.txt
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'rc') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
+
+  publish-scoop:
+    name: Publish to Scoop Bucket
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout scoop bucket
+        uses: actions/checkout@v4
+        with:
+          repository: secwin/secwin-bucket
+          token: ${{ secrets.SCOOP_BUCKET_TOKEN }}
+          path: scoop-bucket
+      - name: Generate manifest
+        run: |
+          VERSION=${{ github.ref_name }}
+          cat > scoop-bucket/bucket/secwin.json <<EOF
+          {
+            "version": "${VERSION#v}",
+            "description": "SecWin - Modern Kali Tooling on Windows",
+            "homepage": "https://github.com/secwin/secwin",
+            "license": "MIT",
+            "architecture": {
+              "64bit": {
+                "url": "https://github.com/secwin/secwin/releases/download/${VERSION}/secwin_windows_amd64.exe",
+                "hash": "$(sha256sum release/secwin_windows_amd64.exe | cut -d' ' -f1)",
+                "bin": ["secwin.exe"]
+              },
+              "arm64": {
+                "url": "https://github.com/secwin/secwin/releases/download/${VERSION}/secwin_windows_arm64.exe",
+                "hash": "$(sha256sum release/secwin_windows_arm64.exe | cut -d' ' -f1)",
+                "bin": ["secwin.exe"]
+              }
+            },
+            "checkver": "github",
+            "autoupdate": {
+              "architecture": {
+                "64bit": {
+                  "url": "https://github.com/secwin/secwin/releases/download/$version/secwin_windows_amd64.exe"
+                },
+                "arm64": {
+                  "url": "https://github.com/secwin/secwin/releases/download/$version/secwin_windows_arm64.exe"
+                }
+              }
+            }
+          }
+          EOF
+      - name: Commit and push
+        run: |
+          cd scoop-bucket
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add bucket/secwin.json
+          git commit -m "Update secwin to ${{ github.ref_name }}" || exit 0
+          git push

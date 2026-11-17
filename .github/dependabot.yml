@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "go"
+    groups:
+      golangci-lint:
+        patterns:
+          - "github.com/golangci/golangci-lint*"
+      test-deps:
+        patterns:
+          - "github.com/stretchr/testify*"
+          - "github.com/golang/mock*"
+      core-deps:
+        patterns:
+          - "github.com/spf13/*"
+          - "gopkg.in/yaml*"
+          - "github.com/go-git/go-git*"
+          - "github.com/tidwall/*"

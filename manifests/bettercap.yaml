@@ -1,0 +1,34 @@
+name: bettercap
+version: "2.30.0"
+description: "Swiss army knife for network attacks and monitoring"
+category: post-exploit
+homepage: "https://www.bettercap.org"
+repository: "https://github.com/bettercap/bettercap"
+license: "GPL-3.0"
+tags: ["mitm", "network-monitoring", "ble", "wifi", "ipv4", "ipv6", "arp", "dns", "http", "https", "proxy"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "2.30.0"
+  - method: binary
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/bettercap/bettercap/releases/download/v2.30.0/bettercap_windows_amd64.zip"
+    binary_name: "bettercap.exe"
+    extract_path: "."
+  - method: github
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "bettercap/bettercap"
+    version: "v2.30.0"
+    extract_path: "."
+    binary_name: "bettercap.exe"
+    pre_commands:
+      - "make build"
+post_install:
+  verify_command: "bettercap --version"

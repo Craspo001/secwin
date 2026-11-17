@@ -1,0 +1,40 @@
+name: naabu
+version: "2.1.0"
+description: "Fast port scanner written in Go with focus on reliability and simplicity"
+category: recon
+homepage: "https://github.com/projectdiscovery/naabu"
+repository: "https://github.com/projectdiscovery/naabu"
+license: "MIT"
+tags: ["port-scanner", "syn-scan", "connect-scan", "udp-scan", "fast-scanning"]
+aliases: ["naabu"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "https://github.com/projectdiscovery/naabu/releases/download/v2.1.0/naabu_2.1.0_windows_amd64.zip"
+    binary_name: "naabu.exe"
+    checksum: "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "projectdiscovery/naabu"
+    version: "v2.1.0"
+    extract_path: "naabu_2.1.0_windows_amd64"
+    binary_name: "naabu.exe"
+  - method: scoop
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "naabu"
+    version: "2.1.0"
+  - method: wsl
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "2.1.0"
+wsl_preferred: false
+post_install:
+  verify_command: "naabu -version"

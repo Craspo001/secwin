@@ -1,0 +1,30 @@
+name: seatbelt
+version: "1.0.0"
+description: "C# project for Windows security audit"
+category: post-exploit
+homepage: "https://github.com/GhostPack/Seatbelt"
+repository: "https://github.com/GhostPack/Seatbelt"
+license: "BSD-3-Clause"
+tags: ["windows", "audit", "security", "privilege-escalation", "csharp"]
+aliases: ["seatbelt"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://github.com/GhostPack/Seatbelt/releases/download/v1.0.0/Seatbelt.zip"
+    binary_name: "Seatbelt.exe"
+    extract_path: "."
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "GhostPack/Seatbelt"
+    version: "v1.0.0"
+    extract_path: "Seatbelt"
+    binary_name: "Seatbelt.exe"
+    pre_commands:
+      - "dotnet build -c Release"
+post_install:
+  verify_command: "Seatbelt.exe -h"

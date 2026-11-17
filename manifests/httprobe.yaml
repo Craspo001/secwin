@@ -1,0 +1,27 @@
+name: httprobe
+version: "1.0.0"
+description: "Take a list of domains and probe for working HTTP and HTTPS servers"
+category: recon
+homepage: "https://github.com/tomnomnom/httprobe"
+repository: "https://github.com/tomnomnom/httprobe"
+license: "MIT"
+tags: ["http-probe", "alive-check", "passive-recon"]
+aliases: ["httprobe"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/tomnomnom/httprobe/releases/download/v1.0.0/httprobe-windows-amd64-1.0.0.zip"
+    binary_name: "httprobe.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "tomnomnom/httprobe"
+    version: "v1.0.0"
+    extract_path: "."
+    binary_name: "httprobe.exe"
+post_install:
+  verify_command: "httprobe -h"

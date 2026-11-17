@@ -1,0 +1,36 @@
+name: hydra
+version: "9.5"
+description: "Network logon cracker supporting many protocols"
+category: crypto
+homepage: "https://github.com/vanhauser-thc/thc-hydra"
+repository: "https://github.com/vanhauser-thc/thc-hydra"
+license: "AGPL-3.0"
+tags: ["password-cracking", "brute-force", "network", "ssh", "rdp", "smb", "ftp", "http"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "9.5"
+  - method: binary
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/vanhauser-thc/thc-hydra/releases/download/v9.5/hydra-9.5-win64.zip"
+    binary_name: "hydra.exe"
+    extract_path: "."
+  - method: github
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "vanhauser-thc/thc-hydra"
+    version: "v9.5"
+    extract_path: "."
+    binary_name: "hydra.exe"
+    pre_commands:
+      - "./configure && make -j"
+post_install:
+  verify_command: "hydra -h"

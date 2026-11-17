@@ -1,0 +1,39 @@
+name: dnsx
+version: "1.2.1"
+description: "Fast and multi-purpose DNS toolkit for DNS reconnaissance"
+category: recon
+homepage: "https://github.com/projectdiscovery/dnsx"
+repository: "https://github.com/projectdiscovery/dnsx"
+license: "MIT"
+tags: ["dns", "subdomain-enumeration", "dns-reconnaissance", "zone-transfer", "wildcard-detection"]
+aliases: ["dnsx"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux"]
+    architectures: ["amd64"]
+    source: "https://github.com/projectdiscovery/dnsx/releases/download/v1.2.1/dnsx_1.2.1_windows_amd64.zip"
+    binary_name: "dnsx.exe"
+    extract_path: "."
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux"]
+    architectures: ["amd64", "arm64"]
+    source: "github.com/projectdiscovery/dnsx/cmd/dnsx"
+    version: "v1.2.1"
+  - method: wsl
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "1.2.1"
+  - method: scoop
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "dnsx"
+wsl_preferred: false
+checksums:
+  "dnsx_1.2.1_windows_amd64.zip": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+post_install:
+  verify_command: "dnsx -version"

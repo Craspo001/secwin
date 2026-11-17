@@ -1,0 +1,37 @@
+name: certipy
+version: "4.8.0"
+description: "Active Directory Certificate Services exploitation"
+category: post-exploit
+homepage: "https://github.com/ly4k/Certipy"
+repository: "https://github.com/ly4k/Certipy"
+license: "GPL-3.0"
+tags: ["ad-cs", "certificates", "pki", "exploitation", "python"]
+aliases: ["certipy"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+  - method: binary
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/ly4k/Certipy/releases/download/v4.8.0/certipy_4.8.0_windows_amd64.zip"
+    binary_name: "certipy.exe"
+    extract_path: "."
+    checksum: "sha256:..."
+  - method: github
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "ly4k/Certipy"
+    version: "v4.8.0"
+    extract_path: "."
+    binary_name: "certipy.exe"
+    pre_commands:
+      - "pip install ."
+post_install:
+  verify_command: "certipy --version"

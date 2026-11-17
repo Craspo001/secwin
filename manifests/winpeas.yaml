@@ -1,0 +1,27 @@
+name: winpeas
+version: "1.0.0"
+description: "Windows Privilege Escalation Awesome Scripts"
+category: post-exploit
+homepage: "https://github.com/carlospolop/PEASS-ng"
+repository: "https://github.com/carlospolop/PEASS-ng"
+license: "GPL-3.0"
+tags: ["windows", "privilege-escalation", "enumeration", "peas"]
+aliases: ["winpeas"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64, x86]
+    source: "https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe"
+    binary_name: "winPEASx64.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "carlospolop/PEASS-ng"
+    version: "latest"
+    extract_path: "winPEAS"
+    binary_name: "winPEASx64.exe"
+post_install:
+  verify_command: "winPEASx64.exe --version"

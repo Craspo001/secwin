@@ -1,0 +1,35 @@
+name: interactsh-client
+version: "1.2.0"
+description: "OOB interaction client for detecting blind vulnerabilities"
+category: utilities
+homepage: "https://github.com/projectdiscovery/interactsh"
+repository: "https://github.com/projectdiscovery/interactsh"
+license: "MIT"
+tags: ["oob", "interaction", "blind-xss", "blind-ssrf", "dns", "http"]
+aliases: ["interactsh"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/projectdiscovery/interactsh/releases/download/v1.2.0/interactsh-client_1.2.0_windows_amd64.zip"
+    binary_name: "interactsh-client.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "projectdiscovery/interactsh"
+    version: "v1.2.0"
+    extract_path: "interactsh-client_1.2.0_windows_amd64"
+    binary_name: "interactsh-client.exe"
+  - method: wsl
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "1.2.0"
+post_install:
+  commands:
+    - "interactsh-client -h"
+  verify_command: "interactsh-client -version"

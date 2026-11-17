@@ -1,0 +1,33 @@
+name: linpeas
+version: "1.0.0"
+description: "Linux Privilege Escalation Awesome Scripts"
+category: post-exploit
+homepage: "https://github.com/carlospolop/PEASS-ng"
+repository: "https://github.com/carlospolop/PEASS-ng"
+license: "GPL-3.0"
+tags: ["linux", "privilege-escalation", "enumeration", "peas"]
+aliases: ["linpeas"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+  - method: binary
+    priority: 90
+    platforms: [linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh"
+    binary_name: "linpeas.sh"
+  - method: github
+    priority: 80
+    platforms: [linux, darwin]
+    architectures: [amd64, arm64]
+    source: "carlospolop/PEASS-ng"
+    version: "latest"
+    extract_path: "linPEAS"
+    binary_name: "linpeas.sh"
+post_install:
+  verify_command: "bash linpeas.sh --version"

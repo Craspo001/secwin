@@ -1,0 +1,33 @@
+name: ghidra
+version: "11.0.1"
+description: "Software reverse engineering framework"
+category: reverse
+homepage: "https://ghidra-sre.org"
+repository: "https://github.com/NationalSecurityAgency/ghidra"
+license: "Apache-2.0"
+tags: ["reverse-engineering", "disassembler", "decompiler", "binary-analysis", "java"]
+wsl_preferred: false
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64]
+    source: "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.0.1_build/ghidra_11.0.1_PUBLIC_20240201.zip"
+    binary_name: "ghidraRun.bat"
+    extract_path: "ghidra_11.0.1_PUBLIC"
+    pre_commands:
+      - "powershell -Command \"$env:JAVA_HOME = (Get-ItemProperty 'HKLM:\\SOFTWARE\\JavaSoft\\JDK').JavaHome\""
+  - method: scoop
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "ghidra"
+    version: "11.0.1"
+  - method: chocolatey
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64]
+    source: "ghidra"
+    version: "11.0.1"
+post_install:
+  verify_command: "ghidraRun.bat --version"

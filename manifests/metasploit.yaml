@@ -1,0 +1,29 @@
+name: metasploit
+version: "6.3.0"
+description: "Penetration testing framework"
+category: exploitation
+homepage: "https://metasploit.com"
+repository: "https://github.com/rapid7/metasploit-framework"
+license: "BSD-3-Clause"
+tags: ["exploitation", "payloads", "post-exploitation", "framework", "ruby"]
+aliases: ["msf", "msfconsole"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "6.3.0"
+  - method: binary
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://github.com/rapid7/metasploit-omnibus/releases/download/6.3.0/metasploit-framework-6.3.0-windows-x64.exe"
+    binary_name: "msfconsole.bat"
+    extract_path: "metasploit-framework"
+    pre_commands:
+      - "powershell -Command \"Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser\""
+post_install:
+  commands:
+    - "msfdb init"
+  verify_command: "msfconsole --version"

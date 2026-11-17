@@ -1,0 +1,40 @@
+name: httpx
+version: "1.5.0"
+description: "Fast and multi-purpose HTTP toolkit allows running multiple probes using retryablehttp library"
+category: recon
+homepage: "https://github.com/projectdiscovery/httpx"
+repository: "https://github.com/projectdiscovery/httpx"
+license: "MIT"
+tags: ["http-prober", "web-technology", "screenshot", "title-extraction", "status-code"]
+aliases: ["httpx"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "https://github.com/projectdiscovery/httpx/releases/download/v1.5.0/httpx_1.5.0_windows_amd64.zip"
+    binary_name: "httpx.exe"
+    checksum: "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "projectdiscovery/httpx"
+    version: "v1.5.0"
+    extract_path: "httpx_1.5.0_windows_amd64"
+    binary_name: "httpx.exe"
+  - method: scoop
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "httpx"
+    version: "1.5.0"
+  - method: wsl
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "1.5.0"
+wsl_preferred: false
+post_install:
+  verify_command: "httpx -version"

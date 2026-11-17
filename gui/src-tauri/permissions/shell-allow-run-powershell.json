@@ -1,0 +1,11 @@
+{
+  "identifier": "shell-allow-run-powershell",
+  "description": "Allow running PowerShell",
+  "allow": [
+    {
+      "name": "powershell",
+      "cmd": "powershell",
+      "args": true
+    }
+  ]
+}

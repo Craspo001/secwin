@@ -1,0 +1,11 @@
+{
+  "identifier": "shell-allow-run-cmd",
+  "description": "Allow running cmd.exe",
+  "allow": [
+    {
+      "name": "cmd",
+      "cmd": "cmd",
+      "args": true
+    }
+  ]
+}

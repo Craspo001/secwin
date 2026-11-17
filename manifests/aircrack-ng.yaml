@@ -1,0 +1,36 @@
+name: aircrack-ng
+version: "1.7"
+description: "WiFi security auditing tools suite"
+category: wireless
+homepage: "https://www.aircrack-ng.org"
+repository: "https://github.com/aircrack-ng/aircrack-ng"
+license: "GPL-2.0"
+tags: ["wifi", "wep", "wpa", "wpa2", "wpa3", "monitor-mode", "injection", "cracking"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "1.7"
+  - method: binary
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://download.aircrack-ng.org/aircrack-ng-1.7-win.zip"
+    binary_name: "aircrack-ng.exe"
+    extract_path: "aircrack-ng-1.7-win"
+  - method: scoop
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64]
+    source: "aircrack-ng"
+    version: "1.7"
+  - method: chocolatey
+    priority: 70
+    platforms: [windows]
+    architectures: [amd64]
+    source: "aircrack-ng"
+    version: "1.7"
+post_install:
+  verify_command: "aircrack-ng --version"

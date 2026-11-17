@@ -1,0 +1,62 @@
+# waybackurls - Fetch all URLs from the Wayback Machine for a domain
+name: waybackurls
+description: "Fetch all URLs that the Wayback Machine knows about for a domain"
+version: "latest"
+category: asset-discovery
+license: MIT
+homepage: "https://github.com/tomnomnom/waybackurls"
+repository: "https://github.com/tomnomnom/waybackurls"
+
+# Binary distribution via GitHub Releases
+distribution:
+  type: github-release
+  owner: tomnomnom
+  repo: waybackurls
+  asset_pattern: "waybackurls-{{.OS}}-{{.Arch}}.tgz"
+  # Extracts single binary from tarball root
+
+platforms:
+  - os: linux
+    arch:
+      - amd64
+      - arm64
+      - 386
+      - armv6
+      - armv7
+  - os: darwin
+    arch:
+      - amd64
+      - arm64
+  - os: windows
+    arch:
+      - amd64
+      - 386
+    asset_suffix: ".zip"
+
+# Binary verification
+verify:
+  binary_name: waybackurls
+  test_args: ["-h"]
+  expected_output_contains: "Usage"
+
+# Installation
+install:
+  binary_name: waybackurls
+  target_dir: "{{.BinDir}}"
+
+# Usage examples
+examples:
+  - description: "Get all URLs for a domain"
+    command: "echo example.com | waybackurls"
+  - description: "Get URLs for multiple domains"
+    command: "cat domains.txt | waybackurls"
+  - description: "Save output to file"
+    command: "echo example.com | waybackurls > urls.txt"
+
+# Metadata
+tags:
+  - recon
+  - wayback
+  - urls
+  - asset-discovery
+  - osint

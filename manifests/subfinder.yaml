@@ -1,0 +1,40 @@
+name: subfinder
+version: "2.6.3"
+description: "Subdomain discovery tool that returns valid subdomains for websites"
+category: recon
+homepage: "https://github.com/projectdiscovery/subfinder"
+repository: "https://github.com/projectdiscovery/subfinder"
+license: "MIT"
+tags: ["subdomain-enumeration", "dns", "reconnaissance", "asset-discovery"]
+aliases: ["subfinder"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "https://github.com/projectdiscovery/subfinder/releases/download/v2.6.3/subfinder_2.6.3_windows_amd64.zip"
+    binary_name: "subfinder.exe"
+    checksum: "sha256:fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321"
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "projectdiscovery/subfinder"
+    version: "v2.6.3"
+    extract_path: "subfinder_2.6.3_windows_amd64"
+    binary_name: "subfinder.exe"
+  - method: scoop
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "subfinder"
+    version: "2.6.3"
+  - method: wsl
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "2.6.3"
+wsl_preferred: false
+post_install:
+  verify_command: "subfinder -version"

@@ -1,0 +1,35 @@
+name: kiterunner
+version: "1.0.2"
+description: "Contextual content discovery tool for APIs"
+category: fuzzing
+homepage: "https://github.com/assetnote/kiterunner"
+repository: "https://github.com/assetnote/kiterunner"
+license: "Apache-2.0"
+tags: ["api", "endpoint-discovery", "swagger", "openapi", "graphql"]
+aliases: ["kr"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/assetnote/kiterunner/releases/download/v1.0.2/kiterunner_1.0.2_windows_amd64.zip"
+    binary_name: "kr.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "assetnote/kiterunner"
+    version: "v1.0.2"
+    extract_path: "kiterunner_1.0.2_windows_amd64"
+    binary_name: "kr.exe"
+  - method: wsl
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "1.0.2"
+post_install:
+  commands:
+    - "kr scan --help"
+  verify_command: "kr version"

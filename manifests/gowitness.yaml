@@ -1,0 +1,35 @@
+name: gowitness
+version: "2.5.0"
+description: "Web screenshot utility using Chrome headless"
+category: recon
+homepage: "https://github.com/sensepost/gowitness"
+repository: "https://github.com/sensepost/gowitness"
+license: "GPL-3.0"
+tags: ["screenshots", "visual-recon", "headless-chrome", "web"]
+aliases: ["gowitness"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64]
+    source: "https://github.com/sensepost/gowitness/releases/download/2.5.0/gowitness_2.5.0_windows_amd64.zip"
+    binary_name: "gowitness.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "sensepost/gowitness"
+    version: "2.5.0"
+    extract_path: "."
+    binary_name: "gowitness.exe"
+  - method: wsl
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "2.5.0"
+post_install:
+  commands:
+    - "gowitness init"
+  verify_command: "gowitness version"

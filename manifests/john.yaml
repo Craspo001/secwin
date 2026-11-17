@@ -1,0 +1,34 @@
+name: john
+version: "1.9.0"
+description: "John the Ripper password cracker"
+category: crypto
+homepage: "https://www.openwall.com/john"
+repository: "https://github.com/openwall/john"
+license: "GPL-2.0"
+tags: ["password-cracking", "cpu", "hash-recovery", "wordlist"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "1.9.0"
+  - method: binary
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://www.openwall.com/john/k/john-1.9.0-jumbo-1-win64.zip"
+    binary_name: "john.exe"
+    extract_path: "john-1.9.0-jumbo-1-win64"
+  - method: github
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "openwall/john"
+    version: "1.9.0-jumbo-1"
+    extract_path: "john-1.9.0-jumbo-1/src"
+    binary_name: "john.exe"
+    pre_commands:
+      - "cd src && make clean && make -j$(nproc)"
+post_install:
+  verify_command: "john --version"

@@ -1,0 +1,27 @@
+name: subzy
+version: "1.0.0"
+description: "Fast subdomain takeover vulnerability scanner"
+category: vuln-scanning
+homepage: "https://github.com/LukaSikic/subzy"
+repository: "https://github.com/LukaSikic/subzy"
+license: "MIT"
+tags: ["subdomain-takeover", "dns", "fingerprinting", "vulnerability"]
+aliases: ["subzy"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/LukaSikic/subzy/releases/download/v1.0.0/subzy_1.0.0_windows_amd64.zip"
+    binary_name: "subzy.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "LukaSikic/subzy"
+    version: "v1.0.0"
+    extract_path: "."
+    binary_name: "subzy.exe"
+post_install:
+  verify_command: "subzy -version"

@@ -1,0 +1,37 @@
+name: wireshark
+version: "4.2.0"
+description: "Network protocol analyzer"
+category: forensics
+homepage: "https://www.wireshark.org"
+repository: "https://gitlab.com/wireshark/wireshark"
+license: "GPL-2.0"
+tags: ["packet-capture", "protocol-analysis", "pcap", "network-forensics"]
+wsl_preferred: false
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://2.na.dl.wireshark.org/win64/Wireshark-4.2.0-x64.exe"
+    binary_name: "Wireshark.exe"
+    extract_path: "."
+  - method: scoop
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "wireshark"
+    version: "4.2.0"
+  - method: chocolatey
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64]
+    source: "wireshark"
+    version: "4.2.0"
+  - method: wsl
+    priority: 70
+    platforms: [windows]
+    architectures: [amd64]
+    source: "kali-linux"
+    version: "4.2.0"
+post_install:
+  verify_command: "wireshark --version"

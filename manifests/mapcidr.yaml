@@ -1,0 +1,33 @@
+name: mapcidr
+version: "1.1.3"
+description: "CIDR manipulation and IP address utility for network operations"
+category: recon
+homepage: "https://github.com/projectdiscovery/mapcidr"
+repository: "https://github.com/projectdiscovery/mapcidr"
+license: "MIT"
+tags: ["cidr", "ip-manipulation", "network-utility", "subnet-calculation"]
+aliases: ["mapcidr"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux"]
+    architectures: ["amd64"]
+    source: "https://github.com/projectdiscovery/mapcidr/releases/download/v1.1.3/mapcidr_1.1.3_windows_amd64.zip"
+    binary_name: "mapcidr.exe"
+    extract_path: "."
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux"]
+    architectures: ["amd64", "arm64"]
+    source: "github.com/projectdiscovery/mapcidr/cmd/mapcidr"
+    version: "v1.1.3"
+  - method: scoop
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "mapcidr"
+wsl_preferred: false
+checksums:
+  "mapcidr_1.1.3_windows_amd64.zip": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+post_install:
+  verify_command: "mapcidr -version"

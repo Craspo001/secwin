@@ -1,0 +1,81 @@
+# tlsx - TLS/SSL Scanner
+name: tlsx
+description: "Fast and configurable TLS/SSL scanner - enumerate certificates, protocols, ciphers, and vulnerabilities"
+version: "latest"
+category: asset-discovery
+license: MIT
+homepage: "https://github.com/projectdiscovery/tlsx"
+repository: "https://github.com/projectdiscovery/tlsx"
+
+# Binary distribution via GitHub Releases
+distribution:
+  type: github-release
+  owner: projectdiscovery
+  repo: tlsx
+  asset_pattern: "tlsx_{{.Version}}_{{.OS}}_{{.Arch}}.tar.gz"
+  # Extracts single binary from tarball root
+
+platforms:
+  - os: linux
+    arch:
+      - amd64
+      - arm64
+      - 386
+      - armv6
+      - armv7
+  - os: darwin
+    arch:
+      - amd64
+      - arm64
+  - os: windows
+    arch:
+      - amd64
+      - 386
+    asset_suffix: ".zip"
+
+# WSL/Kali Linux support
+wsl:
+  distro: kali-linux
+  package_manager: apt
+  package_name: tlsx
+  # Note: ProjectDiscovery tools often not in Kali repos; prefer binary release
+  install_command: "apt update && apt install -y tlsx || echo 'Install via binary release'"
+  dependencies: []
+
+# Binary verification
+verify:
+  binary_name: tlsx
+  test_args: ["-h"]
+  expected_output_contains: "Usage"
+
+# Installation
+install:
+  binary_name: tlsx
+  target_dir: "{{.BinDir}}"
+
+# Usage examples
+examples:
+  - description: "Scan single host for TLS info"
+    command: "tlsx -u https://example.com"
+  - description: "Scan multiple hosts from file"
+    command: "tlsx -l hosts.txt"
+  - description: "Scan with specific ports and output JSON"
+    command: "tlsx -l hosts.txt -p 443,8443,9443 -json -o results.json"
+  - description: "Enumerate certificates only"
+    command: "tlsx -l hosts.txt -cert -json"
+  - description: "Check for specific vulnerabilities (Heartbleed, etc.)"
+    command: "tlsx -l hosts.txt -v -json"
+  - description: "Scan with custom concurrency and timeout"
+    command: "tlsx -l hosts.txt -c 100 -timeout 10 -silent"
+
+# Metadata
+tags:
+  - recon
+  - tls
+  - ssl
+  - certificate
+  - vulnerability
+  - asset-discovery
+  - projectdiscovery
+  - kali
+  - wsl

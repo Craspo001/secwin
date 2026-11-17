@@ -1,0 +1,90 @@
+# gowitness - Web Screenshot Utility
+name: gowitness
+description: "Website screenshot utility using Chrome Headless - captures screenshots of web pages"
+version: "latest"
+category: visual-recon
+license: GPL-3.0
+homepage: "https://github.com/sensepost/gowitness"
+repository: "https://github.com/sensepost/gowitness"
+
+# Binary distribution via GitHub Releases
+distribution:
+  type: github-release
+  owner: sensepost
+  repo: gowitness
+  asset_pattern: "gowitness_{{.OS}}_{{.Arch}}.tar.gz"
+  # Extracts single binary from tarball root
+
+platforms:
+  - os: linux
+    arch:
+      - amd64
+      - arm64
+  - os: darwin
+    arch:
+      - amd64
+      - arm64
+  - os: windows
+    arch:
+      - amd64
+    asset_suffix: ".zip"
+
+# WSL/Kali Linux support
+wsl:
+  distro: kali-linux
+  package_manager: apt
+  package_name: gowitness
+  # Note: Kali package may be older; prefer binary release
+  install_command: "apt update && apt install -y gowitness chromium"
+  dependencies:
+    - chromium
+    - chromium-driver
+
+# Binary verification
+verify:
+  binary_name: gowitness
+  test_args: ["--help"]
+  expected_output_contains: "Usage"
+
+# Installation
+install:
+  binary_name: gowitness
+  target_dir: "{{.BinDir}}"
+
+# Additional dependencies for headless Chrome
+dependencies:
+  - name: chromium
+    description: "Headless Chrome browser for screenshots"
+    linux_packages:
+      apt: ["chromium", "chromium-driver"]
+      yum: ["chromium", "chromedriver"]
+      pacman: ["chromium", "chromedriver"]
+    darwin_packages:
+      brew: ["chromium", "chromedriver"]
+    windows_packages:
+      choco: ["chromium"]
+      winget: ["Google.Chrome"]
+
+# Usage examples
+examples:
+  - description: "Screenshot a single URL"
+    command: "gowitness single -u https://example.com"
+  - description: "Screenshot multiple URLs from file"
+    command: "gowitness file -f urls.txt"
+  - description: "Screenshot with custom resolution and delay"
+    command: "gowitness file -f urls.txt --resolution 1920x1080 --delay 5"
+  - description: "Generate HTML report"
+    command: "gowitness report generate -n report.html"
+  - description: "Screenshot with custom user agent and headers"
+    command: "gowitness single -u https://example.com --user-agent 'Custom Bot' --header 'X-Custom: value'"
+
+# Metadata
+tags:
+  - recon
+  - screenshot
+  - visual
+  - headless-chrome
+  - asset-discovery
+  - web
+  - kali
+  - wsl

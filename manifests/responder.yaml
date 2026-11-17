@@ -1,0 +1,36 @@
+name: responder
+version: "3.1.3"
+description: "LLMNR, NBT-NS and MDNS poisoner"
+category: post-exploit
+homepage: "https://github.com/lgandx/Responder"
+repository: "https://github.com/lgandx/Responder"
+license: "GPL-3.0"
+tags: ["llmnr", "nbtns", "mdns", "poisoning", "credential-harvesting", "python"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "3.1.3"
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "lgandx/Responder"
+    version: "3.1.3"
+    extract_path: "Responder-3.1.3"
+    binary_name: "Responder.py"
+    pre_commands:
+      - "pip install -r requirements.txt"
+  - method: binary
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/lgandx/Responder/archive/refs/tags/3.1.3.zip"
+    binary_name: "Responder.py"
+    extract_path: "Responder-3.1.3"
+    pre_commands:
+      - "pip install -r requirements.txt"
+post_install:
+  verify_command: "python Responder.py --version"

@@ -1,0 +1,29 @@
+name: pdtm
+version: "1.0.0"
+description: "ProjectDiscovery Tool Manager - Install and manage PD tools"
+category: utilities
+homepage: "https://github.com/projectdiscovery/pdtm"
+repository: "https://github.com/projectdiscovery/pdtm"
+license: "MIT"
+tags: ["tool-manager", "projectdiscovery", "nuclei", "subfinder", "httpx", "naabu"]
+aliases: ["pdtm"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/projectdiscovery/pdtm/releases/download/v1.0.0/pdtm_1.0.0_windows_amd64.zip"
+    binary_name: "pdtm.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "projectdiscovery/pdtm"
+    version: "v1.0.0"
+    extract_path: "pdtm_1.0.0_windows_amd64"
+    binary_name: "pdtm.exe"
+post_install:
+  commands:
+    - "pdtm -update-templates"
+  verify_command: "pdtm -version"

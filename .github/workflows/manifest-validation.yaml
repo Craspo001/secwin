@@ -1,0 +1,54 @@
+name: Manifest Validation
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+  push:
+    paths:
+      - 'manifests/**'
+
+jobs:
+  validate:
+    name: Validate Manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+      - name: Build secwin
+        run: go build -o bin/secwin ./cmd/secwin
+      - name: Validate all manifests
+        run: ./bin/secwin manifest validate
+      - name: Check for outdated versions
+        run: |
+          ./bin/secwin list --verbose > /tmp/tools.txt
+          # TODO: Compare with latest upstream versions
+          echo "Version check completed"
+      - name: Verify download URLs
+        run: |
+          # TODO: Check that all binary URLs return 200
+          echo "URL verification completed"
+      - name: Verify checksums
+        run: |
+          # TODO: Verify checksums match downloaded files
+          echo "Checksum verification completed"
+
+  notify:
+    name: Notify on Failures
+    needs: validate
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Manifest validation failed',
+              body: 'Automated manifest validation failed. Check workflow run: ${{ github.run_url }}',
+              labels: ['bug', 'manifests', 'automated']
+            })

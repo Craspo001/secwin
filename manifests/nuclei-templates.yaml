@@ -1,0 +1,32 @@
+name: nuclei-templates
+version: "10.0.0"
+description: "Community curated list of templates for the nuclei vulnerability scanner"
+category: utilities
+homepage: "https://github.com/projectdiscovery/nuclei-templates"
+repository: "https://github.com/projectdiscovery/nuclei-templates"
+license: "MIT"
+tags: ["nuclei", "templates", "cve", "vulnerabilities", "misconfigurations"]
+aliases: ["nuclei-templates"]
+install_methods:
+  - method: github
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "projectdiscovery/nuclei-templates"
+    version: "v10.0.0"
+    extract_path: "nuclei-templates-10.0.0"
+    binary_name: "."
+  - method: script
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    script: |
+      $url = "https://github.com/projectdiscovery/nuclei-templates/archive/refs/heads/master.zip"
+      $out = "$env:TOOL_DIR\nuclei-templates-master.zip"
+      Invoke-WebRequest -Uri $url -OutFile $out
+      Expand-Archive -Path $out -DestinationPath "$env:TOOL_DIR" -Force
+      Move-Item "$env:TOOL_DIR\nuclei-templates-master\*" "$env:TOOL_DIR" -Force
+      Remove-Item "$env:TOOL_DIR\nuclei-templates-master" -Recurse -Force
+      Remove-Item $out
+post_install:
+  verify_command: "dir \"$env:TOOL_DIR\cves\""

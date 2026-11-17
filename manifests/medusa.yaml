@@ -1,0 +1,38 @@
+name: medusa
+version: "2.2"
+description: "Parallel network login auditor"
+category: crypto
+homepage: "https://github.com/jmk-foofus/medusa"
+repository: "https://github.com/jmk-foofus/medusa"
+license: "GPL-2.0"
+tags: ["password-cracking", "brute-force", "parallel", "network", "ssh", "ftp", "http"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "2.2"
+  - method: binary
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64]
+    source: "https://github.com/jmk-foofus/medusa/releases/download/2.2/medusa-2.2.tar.gz"
+    binary_name: "medusa.exe"
+    extract_path: "medusa-2.2"
+    pre_commands:
+      - "./configure && make -j"
+  - method: github
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "jmk-foofus/medusa"
+    version: "2.2"
+    extract_path: "."
+    binary_name: "medusa.exe"
+    pre_commands:
+      - "./configure && make -j"
+post_install:
+  verify_command: "medusa -h"

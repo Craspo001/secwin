@@ -1,0 +1,40 @@
+name: ffuf
+version: "2.1.0"
+description: "Fast web fuzzer written in Go"
+category: fuzzing
+homepage: "https://github.com/ffuf/ffuf"
+repository: "https://github.com/ffuf/ffuf"
+license: "MIT"
+tags: ["web-fuzzing", "directory-enumeration", "parameter-fuzzing", "virtual-host"]
+aliases: ["ffuf"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "https://github.com/ffuf/ffuf/releases/download/v2.1.0/ffuf_2.1.0_windows_amd64.zip"
+    binary_name: "ffuf.exe"
+    checksum: "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "ffuf/ffuf"
+    version: "v2.1.0"
+    extract_path: "ffuf_2.1.0_windows_amd64"
+    binary_name: "ffuf.exe"
+  - method: scoop
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "ffuf"
+    version: "2.1.0"
+  - method: wsl
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "2.1.0"
+wsl_preferred: false
+post_install:
+  verify_command: "ffuf -V"

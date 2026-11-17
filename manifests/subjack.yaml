@@ -1,0 +1,27 @@
+name: subjack
+version: "1.0.0"
+description: "Subdomain takeover detection tool"
+category: vuln-scanning
+homepage: "https://github.com/hacker/subjack"
+repository: "https://github.com/hacker/subjack"
+license: "MIT"
+tags: ["subdomain-takeover", "dns", "cloud", "vulnerability"]
+aliases: ["subjack"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/hacker/subjack/releases/download/v1.0.0/subjack_windows_amd64.zip"
+    binary_name: "subjack.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "hacker/subjack"
+    version: "v1.0.0"
+    extract_path: "."
+    binary_name: "subjack.exe"
+post_install:
+  verify_command: "subjack -h"

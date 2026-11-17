@@ -1,0 +1,27 @@
+name: waybackurls
+version: "1.0.0"
+description: "Fetch all URLs that the Wayback Machine knows about for a domain"
+category: recon
+homepage: "https://github.com/tomnomnom/waybackurls"
+repository: "https://github.com/tomnomnom/waybackurls"
+license: "MIT"
+tags: ["wayback", "url-discovery", "passive-recon", "archive"]
+aliases: ["waybackurls"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/tomnomnom/waybackurls/releases/download/v1.0.0/waybackurls-windows-amd64-1.0.0.zip"
+    binary_name: "waybackurls.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "tomnomnom/waybackurls"
+    version: "v1.0.0"
+    extract_path: "."
+    binary_name: "waybackurls.exe"
+post_install:
+  verify_command: "waybackurls -h"

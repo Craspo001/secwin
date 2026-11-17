@@ -1,0 +1,33 @@
+name: katana
+version: "1.0.0"
+description: "Next-generation crawling and spidering framework"
+category: recon
+homepage: "https://github.com/projectdiscovery/katana"
+repository: "https://github.com/projectdiscovery/katana"
+license: "MIT"
+tags: ["crawler", "spider", "headless", "javascript", "spa"]
+aliases: ["katana"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/projectdiscovery/katana/releases/download/v1.0.0/katana_1.0.0_windows_amd64.zip"
+    binary_name: "katana.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "projectdiscovery/katana"
+    version: "v1.0.0"
+    extract_path: "katana_1.0.0_windows_amd64"
+    binary_name: "katana.exe"
+  - method: wsl
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "1.0.0"
+post_install:
+  verify_command: "katana -version"

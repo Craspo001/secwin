@@ -1,0 +1,36 @@
+name: impacket
+version: "0.12.0"
+description: "Network protocol implementation and tools for Windows"
+category: post-exploit
+homepage: "https://github.com/fortra/impacket"
+repository: "https://github.com/fortra/impacket"
+license: "Apache-2.0"
+tags: ["smb", "wmi", "dcom", "rpc", "kerberos", "ldap", "python"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "0.12.0"
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "fortra/impacket"
+    version: "impacket_0_12_0"
+    extract_path: "impacket-impacket_0_12_0"
+    binary_name: "impacket-tools"
+    pre_commands:
+      - "pip install ."
+  - method: binary
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/fortra/impacket/archive/refs/tags/impacket_0_12_0.zip"
+    binary_name: "impacket-tools"
+    extract_path: "impacket-impacket_0_12_0"
+    pre_commands:
+      - "pip install ."
+post_install:
+  verify_command: "python -c \"import impacket; print(impacket.__version__)\""

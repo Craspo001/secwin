@@ -1,0 +1,47 @@
+# Build outputs
+secwin.exe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go
+vendor/
+go.sum
+
+# Tauri/UI
+ui/target/
+ui/node_modules/
+ui/dist/
+ui/.vite/
+ui/*.local
+ui/src-tauri/target/
+ui/src-tauri/Cargo.lock
+
+# Config
+*.local.yaml
+*.local.yml
+.secwin/
+
+# Evidence/artifacts
+evidence/
+benchmarks/
+*.manifest
+*.sha256
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test outputs
+*.test
+coverage.out

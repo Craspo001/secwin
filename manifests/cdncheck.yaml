@@ -1,0 +1,33 @@
+name: cdncheck
+version: "1.0.3"
+description: "CDN detection and identification for reconnaissance and asset mapping"
+category: recon
+homepage: "https://github.com/projectdiscovery/cdncheck"
+repository: "https://github.com/projectdiscovery/cdncheck"
+license: "MIT"
+tags: ["cdn-detection", "cdn-identification", "reconnaissance", "asset-mapping", "waf-detection"]
+aliases: ["cdncheck"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux"]
+    architectures: ["amd64"]
+    source: "https://github.com/projectdiscovery/cdncheck/releases/download/v1.0.3/cdncheck_1.0.3_windows_amd64.zip"
+    binary_name: "cdncheck.exe"
+    extract_path: "."
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux"]
+    architectures: ["amd64", "arm64"]
+    source: "github.com/projectdiscovery/cdncheck/cmd/cdncheck"
+    version: "v1.0.3"
+  - method: scoop
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "cdncheck"
+wsl_preferred: false
+checksums:
+  "cdncheck_1.0.3_windows_amd64.zip": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+post_install:
+  verify_command: "cdncheck -version"

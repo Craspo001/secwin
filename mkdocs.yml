@@ -1,0 +1,161 @@
+site_name: SecWin Documentation
+site_description: Modern Kali Tooling on Windows — Unified security toolchain for Windows pentesters
+site_author: SecWin Contributors
+site_url: https://secwin.dev
+
+repo_name: secwin/secwin
+repo_url: https://github.com/secwin/secwin
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2024 SecWin Contributors — MIT License
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.tabs.link
+    - toc.integrate
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+      - Configuration: getting-started/configuration.md
+  - Tools:
+      - Manifest Format: tools/manifest-format.md
+      - Adding Tools: tools/adding-tools.md
+      - Install Methods: tools/install-methods.md
+      - Tool Categories: tools/categories.md
+  - Playbooks:
+      - DSL Reference: playbooks/dsl-reference.md
+      - Built-in Playbooks: playbooks/builtin.md
+      - Writing Playbooks: playbooks/writing.md
+      - Control Flow: playbooks/control-flow.md
+      - Artifacts & Reports: playbooks/artifacts-reports.md
+  - Operations:
+      - OpSec Profiles: operations/opsec-profiles.md
+      - Evidence Locker: operations/evidence-locker.md
+      - Reporting: operations/reporting.md
+      - Network Isolation: operations/network-isolation.md
+  - WSL Integration:
+      - Setup: wsl/setup.md
+      - Distro Management: wsl/distro-management.md
+      - Running Tools: wsl/running-tools.md
+      - File Sharing: wsl/file-sharing.md
+  - Development:
+      - Architecture: development/architecture.md
+      - Adding Installers: development/adding-installers.md
+      - Extending Playbooks: development/extending-playbooks.md
+      - Testing: development/testing.md
+      - Release Process: development/release.md
+  - Reference:
+      - CLI Reference: reference/cli.md
+      - Config Schema: reference/config.md
+      - Manifest Schema: reference/manifest-schema.md
+      - Playbook Schema: reference/playbook-schema.md
+      - Environment Variables: reference/env-vars.md
+  - Compliance:
+      - Ethics Policy: compliance/ethics.md
+      - Legal: compliance/legal.md
+      - GDPR: compliance/gdpr.md
+  - About:
+      - Changelog: about/changelog.md
+      - Contributing: about/contributing.md
+      - License: about/license.md
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      base_path: docs/
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/secwin/secwin
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/secwin
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/secwin_dev
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js

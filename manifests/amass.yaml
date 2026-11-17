@@ -1,0 +1,39 @@
+name: amass
+version: "4.2.0"
+description: "In-depth attack surface mapping and asset discovery"
+category: recon
+homepage: "https://github.com/OWASP/Amass"
+repository: "https://github.com/OWASP/Amass"
+license: "Apache-2.0"
+tags: ["attack-surface", "asset-discovery", "subdomain-enumeration", "dns", "osint"]
+aliases: ["amass"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux"]
+    architectures: ["amd64"]
+    source: "https://github.com/OWASP/Amass/releases/download/v4.2.0/amass_windows_amd64.zip"
+    binary_name: "amass.exe"
+    extract_path: "amass_windows_amd64"
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux"]
+    architectures: ["amd64", "arm64"]
+    source: "OWASP/Amass/v4"
+    version: "v4.2.0"
+  - method: wsl
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "4.2.0"
+  - method: scoop
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "amass"
+wsl_preferred: false
+checksums:
+  "amass_windows_amd64.zip": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+post_install:
+  verify_command: "amass version"

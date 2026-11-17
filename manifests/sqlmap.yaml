@@ -1,0 +1,43 @@
+name: sqlmap
+version: "1.7.1"
+description: "Automatic SQL injection and database takeover tool"
+category: exploitation
+homepage: "https://sqlmap.org"
+repository: "https://github.com/sqlmapproject/sqlmap"
+license: "GPL-2.0"
+tags: ["sql-injection", "database-takeover", "waf-bypass", "automated-exploitation"]
+aliases: ["sqlmap"]
+install_methods:
+  - method: github
+    priority: 100
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "sqlmapproject/sqlmap"
+    version: "1.7.1"
+    extract_path: "sqlmap-1.7.1"
+    binary_name: "sqlmap.py"
+    pre_commands:
+      - "pip install -r requirements.txt"
+  - method: binary
+    priority: 90
+    platforms: ["windows"]
+    architectures: ["amd64"]
+    source: "https://github.com/sqlmapproject/sqlmap/archive/refs/tags/1.7.1.zip"
+    binary_name: "sqlmap.py"
+    extract_path: "sqlmap-1.7.1"
+  - method: scoop
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "sqlmap"
+    version: "1.7.1"
+  - method: wsl
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "1.7.1"
+wsl_preferred: true
+wsldistro: "kali-linux"
+post_install:
+  verify_command: "python sqlmap.py --version"

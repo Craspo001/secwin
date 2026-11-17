@@ -1,0 +1,33 @@
+name: gau
+version: "2.2.0"
+description: "GetAllURLs - Fetch known URLs from AlienVault's Open Threat Exchange, Wayback Machine, and Common Crawl"
+category: recon
+homepage: "https://github.com/lc/gau"
+repository: "https://github.com/lc/gau"
+license: "MIT"
+tags: ["url-discovery", "wayback", "otx", "commoncrawl", "passive-recon"]
+aliases: ["gau"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/lc/gau/releases/download/v2.2.0/gau_2.2.0_windows_amd64.zip"
+    binary_name: "gau.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "lc/gau"
+    version: "v2.2.0"
+    extract_path: "gau_2.2.0_windows_amd64"
+    binary_name: "gau.exe"
+  - method: wsl
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "2.2.0"
+post_install:
+  verify_command: "gau -version"

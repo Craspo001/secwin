@@ -1,0 +1,24 @@
+name: kape
+version: "4.0.0"
+description: "Kroll Artifact Parser and Extractor - Triage and collection tool"
+category: forensics
+homepage: "https://www.kroll.com/en/services/cyber-risk/incident-response-litigation-support/kroll-artifact-parser-extractor-kape"
+repository: "https://github.com/kape-team/kape"
+license: "Proprietary"
+tags: ["triage", "collection", "artifacts", "forensics", "windows"]
+aliases: ["kape"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://www.kroll.com/en/services/cyber-risk/incident-response-litigation-support/kroll-artifact-parser-extractor-kape"
+    binary_name: "kape.exe"
+    extract_path: "."
+  - method: wsl
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+post_install:
+  verify_command: "kape.exe --help"

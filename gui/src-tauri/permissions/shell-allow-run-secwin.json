@@ -1,0 +1,11 @@
+{
+  "identifier": "shell-allow-run-secwin",
+  "description": "Allow running secwin CLI",
+  "allow": [
+    {
+      "name": "secwin",
+      "cmd": "secwin",
+      "args": true
+    }
+  ]
+}

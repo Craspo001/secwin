@@ -1,0 +1,28 @@
+name: bloodhound
+version: "6.0.0"
+description: "Active Directory graph analysis and attack path discovery"
+category: post-exploit
+homepage: "https://github.com/BloodHoundAD/BloodHound"
+repository: "https://github.com/BloodHoundAD/BloodHound"
+license: "GPL-3.0"
+tags: ["ad", "graph", "attack-paths", "privilege-escalation", "neo4j", "electron"]
+wsl_preferred: false
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64]
+    source: "https://github.com/BloodHoundAD/BloodHound/releases/download/6.0.0/BloodHound-win64.zip"
+    binary_name: "BloodHound.exe"
+    extract_path: "BloodHound-win64"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64]
+    source: "BloodHoundAD/BloodHound"
+    version: "6.0.0"
+    extract_path: "BloodHound-linux-x64"
+    binary_name: "BloodHound"
+post_install:
+  verify_command: "BloodHound --version"

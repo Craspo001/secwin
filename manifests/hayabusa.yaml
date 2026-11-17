@@ -1,0 +1,29 @@
+name: hayabusa
+version: "2.14.0"
+description: "Windows event log fast forensics timeline generator and threat hunting tool"
+category: forensics
+homepage: "https://github.com/Yamato-Security/hayabusa"
+repository: "https://github.com/Yamato-Security/hayabusa"
+license: "GPL-3.0"
+tags: ["event-logs", "forensics", "timeline", "threat-hunting", "sigma", "rust"]
+aliases: ["hayabusa"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/Yamato-Security/hayabusa/releases/download/v2.14.0/hayabusa-2.14.0-win64.zip"
+    binary_name: "hayabusa.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "Yamato-Security/hayabusa"
+    version: "v2.14.0"
+    extract_path: "."
+    binary_name: "hayabusa.exe"
+    pre_commands:
+      - "cargo build --release"
+post_install:
+  verify_command: "hayabusa --version"

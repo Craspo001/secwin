@@ -1,0 +1,40 @@
+name: gobuster
+version: "3.6.0"
+description: "Directory/File, DNS and VHost busting tool written in Go"
+category: fuzzing
+homepage: "https://github.com/OJ/gobuster"
+repository: "https://github.com/OJ/gobuster"
+license: "MIT"
+tags: ["directory-enumeration", "dns-enumeration", "vhost-enumeration", "s3-enumeration"]
+aliases: ["gobuster"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "https://github.com/OJ/gobuster/releases/download/v3.6.0/gobuster_3.6.0_windows_amd64.zip"
+    binary_name: "gobuster.exe"
+    checksum: "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "OJ/gobuster"
+    version: "v3.6.0"
+    extract_path: "gobuster_3.6.0_windows_amd64"
+    binary_name: "gobuster.exe"
+  - method: scoop
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "gobuster"
+    version: "3.6.0"
+  - method: wsl
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "3.6.0"
+wsl_preferred: false
+post_install:
+  verify_command: "gobuster version"

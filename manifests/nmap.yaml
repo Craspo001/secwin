@@ -1,0 +1,38 @@
+name: nmap
+version: "7.94"
+description: "Network exploration tool and security/port scanner"
+category: recon
+homepage: "https://nmap.org"
+repository: "https://github.com/nmap/nmap"
+license: "GPL-2.0"
+tags: ["port-scanner", "network-discovery", "service-detection", "os-fingerprinting"]
+aliases: ["nmap"]
+install_methods:
+  - method: scoop
+    priority: 100
+    platforms: ["windows", "linux"]
+    architectures: ["amd64", "arm64"]
+    source: "nmap"
+  - method: chocolatey
+    priority: 90
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "nmap"
+  - method: wsl
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "7.94"
+  - method: binary
+    priority: 50
+    platforms: ["windows", "linux"]
+    architectures: ["amd64"]
+    source: "https://nmap.org/dist/nmap-7.94-win64.zip"
+    binary_name: "nmap.exe"
+    extract_path: "nmap-7.94"
+wsl_preferred: false
+checksums:
+  "nmap-7.94-win64.zip": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+post_install:
+  verify_command: "nmap --version"

@@ -1,0 +1,65 @@
+# httprobe - Take a list of domains and probe for working HTTP/HTTPS servers
+name: httprobe
+description: "Take a list of domains and probe for working HTTP and HTTPS servers"
+version: "latest"
+category: asset-discovery
+license: MIT
+homepage: "https://github.com/tomnomnom/httprobe"
+repository: "https://github.com/tomnomnom/httprobe"
+
+# Binary distribution via GitHub Releases
+distribution:
+  type: github-release
+  owner: tomnomnom
+  repo: httprobe
+  asset_pattern: "httprobe-{{.OS}}-{{.Arch}}.tgz"
+  # Extracts single binary from tarball root
+
+platforms:
+  - os: linux
+    arch:
+      - amd64
+      - arm64
+      - 386
+      - armv6
+      - armv7
+  - os: darwin
+    arch:
+      - amd64
+      - arm64
+  - os: windows
+    arch:
+      - amd64
+      - 386
+    asset_suffix: ".zip"
+
+# Binary verification
+verify:
+  binary_name: httprobe
+  test_args: ["-h"]
+  expected_output_contains: "Usage"
+
+# Installation
+install:
+  binary_name: httprobe
+  target_dir: "{{.BinDir}}"
+
+# Usage examples
+examples:
+  - description: "Probe domains from stdin for HTTP/HTTPS"
+    command: "cat domains.txt | httprobe"
+  - description: "Probe with custom ports"
+    command: "echo example.com | httprobe -p http:8080 -p https:8443"
+  - description: "Only show HTTPS"
+    command: "cat domains.txt | httprobe -s -p https:443"
+  - description: "Set concurrency and timeout"
+    command: "cat domains.txt | httprobe -c 50 -t 10000"
+
+# Metadata
+tags:
+  - recon
+  - http
+  - https
+  - probing
+  - asset-discovery
+  - alive

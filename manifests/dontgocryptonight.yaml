@@ -1,0 +1,29 @@
+name: dontgocryptonight
+version: "1.0.0"
+description: "AV/EDR evasion tool for Go binaries"
+category: post-exploit
+homepage: "https://github.com/netero1010/DontGoCryptoNight"
+repository: "https://github.com/netero1010/DontGoCryptoNight"
+license: "MIT"
+tags: ["av-evasion", "edr-evasion", "golang", "obfuscation"]
+aliases: ["dgcn"]
+install_methods:
+  - method: github
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "netero1010/DontGoCryptoNight"
+    version: "v1.0.0"
+    extract_path: "."
+    binary_name: "DontGoCryptoNight.exe"
+    pre_commands:
+      - "go build -o DontGoCryptoNight.exe ."
+  - method: binary
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://github.com/netero1010/DontGoCryptoNight/releases/download/v1.0.0/DontGoCryptoNight_windows_amd64.zip"
+    binary_name: "DontGoCryptoNight.exe"
+    extract_path: "."
+post_install:
+  verify_command: "DontGoCryptoNight.exe --help"

@@ -1,0 +1,265 @@
+metadata:
+  name: web-app-test
+  version: "1.0"
+  author: "SecWin Team"
+  description: "Web application testing: Crawl → Nuclei scan → Auth testing → Business logic → API fuzz → Custom checks"
+  mitre_tactics: ["TA0043", "TA0007", "TA0005"]
+  tags: ["web-app", "api", "auth", "business-logic", "fuzzing"]
+
+variables:
+  target_url:
+    type: string
+    required: true
+    description: "Target base URL (e.g., https://app.example.com)"
+  output_dir:
+    type: string
+    default: "./engagements/{{.target_url}}/web-app-test"
+    description: "Output directory"
+  auth_type:
+    type: string
+    default: "none"
+    enum: ["none", "basic", "form", "jwt", "oauth", "cookie"]
+    description: "Authentication type"
+  username:
+    type: string
+    description: "Username for authentication"
+  password:
+    type: string
+    description: "Password for authentication"
+    secret: true
+  jwt_token:
+    type: string
+    description: "JWT token for authentication"
+    secret: true
+  cookies:
+    type: string
+    description: "Cookies for authentication (format: name=value; name2=value2)"
+    secret: true
+  crawl_depth:
+    type: int
+    default: 3
+    description: "Maximum crawl depth"
+  rate_limit:
+    type: int
+    default: 50
+    description: "Requests per second"
+  custom_headers:
+    type: string
+    default: ""
+    description: "Custom headers (format: Header: value\\nHeader2: value2)"
+  wordlist:
+    type: string
+    default: "/usr/share/seclists/Discovery/Web-Content/raft-medium-files.txt"
+    description: "Wordlist for fuzzing"
+
+steps:
+  - id: crawl
+    name: "Web Application Crawling"
+    tool: httpx
+    args:
+      - "-u"
+      - "{{.target_url}}"
+      - "-crawl"
+      - "-depth"
+      - "{{.crawl_depth}}"
+      - "-o"
+      - "{{.output_dir}}/crawl.txt"
+      - "-json"
+      - "-silent"
+      - "-rate-limit"
+      - "{{.rate_limit}}"
+    artifacts:
+      - "{{.output_dir}}/crawl.txt"
+    mitre_techniques: ["T1590.001"]
+    timeout: "20m"
+
+  - id: nuclei_scan
+    name: "Vulnerability Scanning with Nuclei"
+    tool: nuclei
+    args:
+      - "-u"
+      - "{{.target_url}}"
+      - "-t"
+      - "cves/,vulnerabilities/,misconfiguration/,exposures/,default-logins/,takeovers/"
+      - "-o"
+      - "{{.output_dir}}/nuclei.json"
+      - "-json"
+      - "-silent"
+      - "-rate-limit"
+      - "{{.rate_limit}}"
+    artifacts:
+      - "{{.output_dir}}/nuclei.json"
+    mitre_techniques: ["T1590.001", "T1190"]
+    timeout: "30m"
+
+  - id: auth_testing
+    name: "Authentication Testing"
+    tool: echo
+    args:
+      - "Auth testing for {{.auth_type}} - implement custom auth checks"
+    artifacts: []
+    mitre_techniques: ["T1556", "T1110"]
+    timeout: "10m"
+    condition: "{{ne .auth_type \"none\"}}"
+    if:
+      condition: '{{ne .auth_type "none"}}'
+      then:
+        - id: basic_auth_test
+          name: "Basic Auth Brute Force"
+          tool: hydra
+          args:
+            - "-l"
+            - "{{.username}}"
+            - "-P"
+            - "/usr/share/seclists/Passwords/Common-Credentials/10-million-password-list-top-10000.txt"
+            - "{{.target_url}}"
+            - "http-get"
+            - "-t"
+            - "4"
+            - "-o"
+            - "{{.output_dir}}/basic_auth.txt"
+          condition: '{{eq .auth_type "basic"}}'
+
+        - id: form_auth_test
+          name: "Form Auth Brute Force"
+          tool: ffuf
+          args:
+            - "-w"
+            - "/usr/share/seclists/Passwords/Common-Credentials/10-million-password-list-top-10000.txt:PASS"
+            - "-u"
+            - "{{.target_url}}/login"
+            - "-X"
+            - "POST"
+            - "-d"
+            - "username={{.username}}&password=PASS"
+            - "-fc"
+            - "200"
+            - "-o"
+            - "{{.output_dir}}/form_auth.json"
+            - "-of"
+            - "json"
+          condition: '{{eq .auth_type "form"}}'
+
+  - id: api_discovery
+    name: "API Endpoint Discovery"
+    tool: ffuf
+    args:
+      - "-w"
+      - "/usr/share/seclists/Discovery/Web-Content/api-endpoints.txt"
+      - "-u"
+      - "{{.target_url}}/FUZZ"
+      - "-mc"
+      - "200,201,204,401,403,405,500"
+      - "-t"
+      - "{{.rate_limit}}"
+      - "-o"
+      - "{{.output_dir}}/api_endpoints.json"
+      - "-of"
+      - "json"
+      - "-H"
+      - "Accept: application/json"
+    artifacts:
+      - "{{.output_dir}}/api_endpoints.json"
+    mitre_techniques: ["T1590.001"]
+    timeout: "20m"
+
+  - id: parameter_fuzzing
+    name: "Parameter Fuzzing"
+    tool: ffuf
+    args:
+      - "-w"
+      - "/usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt:PARAM"
+      - "-w"
+      - "/usr/share/seclists/Fuzzing/403-bypass-string.txt:VALUE"
+      - "-u"
+      - "{{.target_url}}?PARAM=VALUE"
+      - "-mc"
+      - "200,403,500"
+      - "-t"
+      - "20"
+      - "-o"
+      - "{{.output_dir}}/param_fuzz.json"
+      - "-of"
+      - "json"
+    artifacts:
+      - "{{.output_dir}}/param_fuzz.json"
+    mitre_techniques: ["T1590.004"]
+    timeout: "30m"
+
+  - id: business_logic_tests
+    name: "Business Logic Testing"
+    tool: echo
+    args:
+      - "Manual business logic tests required: IDOR, race conditions, payment bypass, etc."
+    artifacts: []
+    mitre_techniques: ["T1556", "T1558"]
+    timeout: "5m"
+
+  - id: jwt_testing
+    name: "JWT Security Testing"
+    tool: echo
+    args:
+      - "JWT testing: alg none, key confusion, kid injection, expiration"
+    artifacts: []
+    mitre_techniques: ["T1556.002"]
+    timeout: "5m"
+    condition: '{{eq .auth_type "jwt"}}'
+
+  - id: cors_testing
+    name: "CORS Misconfiguration Testing"
+    tool: ffuf
+    args:
+      - "-w"
+      - "/usr/share/seclists/Discovery/Web-Content/cors-origins.txt:ORIGIN"
+      - "-u"
+      - "{{.target_url}}"
+      - "-H"
+      - "Origin: ORIGIN"
+      - "-H"
+      - "Access-Control-Request-Method: GET"
+      - "-X"
+      - "OPTIONS"
+      - "-mc"
+      - "200,204"
+      - "-t"
+      - "10"
+      - "-o"
+      - "{{.output_dir}}/cors.json"
+      - "-of"
+      - "json"
+    artifacts:
+      - "{{.output_dir}}/cors.json"
+    mitre_techniques: ["T1590.001"]
+    timeout: "10m"
+
+  - id: ssl_tls_testing
+    name: "SSL/TLS Configuration Testing"
+    tool: nmap
+    args:
+      - "--script"
+      - "ssl-enum-ciphers,ssl-cert,ssl-heartbleed,ssl-poodle,ssl-ccs-injection"
+      - "-p"
+      - "443"
+      - "{{.target_url}}"
+      - "-oA"
+      - "{{.output_dir}}/ssl_test"
+    artifacts:
+      - "{{.output_dir}}/ssl_test.*"
+    mitre_techniques: ["T1590.001"]
+    timeout: "10m"
+
+outputs:
+  findings: "{{.output_dir}}/findings.json"
+  report: "{{.output_dir}}/report.html"
+  evidence_dir: "{{.output_dir}}"
+
+hooks:
+  pre_step:
+    - tool: echo
+      args: ["[WebApp] Starting: {{.step.name}}"]
+  post_step:
+    - tool: echo
+      args: ["[WebApp] Completed: {{.step.name}}"]
+  on_failure:
+    - tool: echo
+      args: ["[WebApp] FAILED: {{.step.name}} - {{.error}}"]

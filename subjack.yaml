@@ -1,0 +1,72 @@
+# subjack - Subdomain Takeover Tool
+name: subjack
+description: "Subdomain Takeover tool written in Go - checks subdomains for takeover vulnerabilities"
+version: "latest"
+category: asset-discovery
+license: MIT
+homepage: "https://github.com/haccer/subjack"
+repository: "https://github.com/haccer/subjack"
+
+# Binary distribution via GitHub Releases
+distribution:
+  type: github-release
+  owner: haccer
+  repo: subjack
+  asset_pattern: "subjack_{{.OS}}_{{.Arch}}.tar.gz"
+  # Extracts single binary from tarball root
+
+platforms:
+  - os: linux
+    arch:
+      - amd64
+      - arm64
+      - 386
+      - armv6
+      - armv7
+  - os: darwin
+    arch:
+      - amd64
+      - arm64
+  - os: windows
+    arch:
+      - amd64
+      - 386
+    asset_suffix: ".zip"
+
+# Binary verification
+verify:
+  binary_name: subjack
+  test_args: ["-h"]
+  expected_output_contains: "Usage"
+
+# Installation
+install:
+  binary_name: subjack
+  target_dir: "{{.BinDir}}"
+
+# Configuration file (fingerprints)
+config:
+  name: fingerprints.json
+  description: "Service fingerprints for takeover detection"
+  download_url: "https://raw.githubusercontent.com/haccer/subjack/master/fingerprints.json"
+  target_path: "{{.ConfigDir}}/subjack/fingerprints.json"
+
+# Usage examples
+examples:
+  - description: "Scan single domain for takeover"
+    command: "subjack -d example.com -ssl"
+  - description: "Scan multiple domains from file"
+    command: "subjack -w domains.txt -ssl -c {{.ConfigDir}}/subjack/fingerprints.json"
+  - description: "Scan with verbose output and threads"
+    command: "subjack -w domains.txt -ssl -v -t 100 -c {{.ConfigDir}}/subjack/fingerprints.json"
+  - description: "Output only vulnerable subdomains"
+    command: "subjack -w domains.txt -ssl -o vulnerable.txt -c {{.ConfigDir}}/subjack/fingerprints.json"
+
+# Metadata
+tags:
+  - recon
+  - subdomain
+  - takeover
+  - asset-discovery
+  - vulnerability
+  - cname

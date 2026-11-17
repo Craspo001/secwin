@@ -1,0 +1,35 @@
+name: notify
+version: "1.0.6"
+description: "Multi-platform notification utility for security tools"
+category: utilities
+homepage: "https://github.com/projectdiscovery/notify"
+repository: "https://github.com/projectdiscovery/notify"
+license: "MIT"
+tags: ["notifications", "slack", "discord", "telegram", "email", "webhook"]
+aliases: ["notify"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/projectdiscovery/notify/releases/download/v1.0.6/notify_1.0.6_windows_amd64.zip"
+    binary_name: "notify.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "projectdiscovery/notify"
+    version: "v1.0.6"
+    extract_path: "notify_1.0.6_windows_amd64"
+    binary_name: "notify.exe"
+  - method: wsl
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "1.0.6"
+post_install:
+  commands:
+    - "notify -h"
+  verify_command: "notify -version"

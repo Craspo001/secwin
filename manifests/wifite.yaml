@@ -1,0 +1,36 @@
+name: wifite
+version: "2.5.0"
+description: "Automated wireless attack tool"
+category: wireless
+homepage: "https://github.com/derv82/wifite2"
+repository: "https://github.com/derv82/wifite2"
+license: "GPL-2.0"
+tags: ["wifi", "automated", "wep", "wpa", "wps", "pixie-dust"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "2.5.0"
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "derv82/wifite2"
+    version: "2.5.0"
+    extract_path: "wifite2-2.5.0"
+    binary_name: "wifite.py"
+    pre_commands:
+      - "pip install -r requirements.txt"
+  - method: binary
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/derv82/wifite2/archive/refs/tags/2.5.0.zip"
+    binary_name: "wifite.py"
+    extract_path: "wifite2-2.5.0"
+    pre_commands:
+      - "pip install -r requirements.txt"
+post_install:
+  verify_command: "python wifite.py --version"

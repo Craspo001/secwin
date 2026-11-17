@@ -1,0 +1,75 @@
+# subzy - Subdomain Takeover Vulnerability Scanner v2
+name: subzy
+description: "Fast subdomain takeover vulnerability scanner - checks for dangling DNS records"
+version: "latest"
+category: asset-discovery
+license: MIT
+homepage: "https://github.com/LukaSikic/subzy"
+repository: "https://github.com/LukaSikic/subzy"
+
+# Binary distribution via GitHub Releases
+distribution:
+  type: github-release
+  owner: LukaSikic
+  repo: subzy
+  asset_pattern: "subzy_{{.OS}}_{{.Arch}}.tar.gz"
+  # Extracts single binary from tarball root
+
+platforms:
+  - os: linux
+    arch:
+      - amd64
+      - arm64
+      - 386
+      - armv6
+      - armv7
+  - os: darwin
+    arch:
+      - amd64
+      - arm64
+  - os: windows
+    arch:
+      - amd64
+      - 386
+    asset_suffix: ".zip"
+
+# Binary verification
+verify:
+  binary_name: subzy
+  test_args: ["-h"]
+  expected_output_contains: "Usage"
+
+# Installation
+install:
+  binary_name: subzy
+  target_dir: "{{.BinDir}}"
+
+# Configuration file (providers)
+config:
+  name: providers.yaml
+  description: "Service provider configurations for takeover detection"
+  download_url: "https://raw.githubusercontent.com/LukaSikic/subzy/master/providers.yaml"
+  target_path: "{{.ConfigDir}}/subzy/providers.yaml"
+
+# Usage examples
+examples:
+  - description: "Scan single target"
+    command: "subzy -target example.com"
+  - description: "Scan multiple targets from file"
+    command: "subzy -targets domains.txt"
+  - description: "Scan with custom provider config and concurrency"
+    command: "subzy -targets domains.txt -concurrency 100 -providers {{.ConfigDir}}/subzy/providers.yaml"
+  - description: "Output only vulnerable (JSON)"
+    command: "subzy -targets domains.txt -output json -hide_fails"
+  - description: "Verify takeover with custom timeout"
+    command: "subzy -target example.com -timeout 10 -verify_ssl"
+
+# Metadata
+tags:
+  - recon
+  - subdomain
+  - takeover
+  - asset-discovery
+  - vulnerability
+  - dangling-dns
+  - cname

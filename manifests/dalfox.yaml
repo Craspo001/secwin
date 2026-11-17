@@ -1,0 +1,39 @@
+name: dalfox
+version: "2.10.0"
+description: "Parameter Analysis and XSS Scanning tool based on golang"
+category: vuln-scanning
+homepage: "https://github.com/hahwul/dalfox"
+repository: "https://github.com/hahwul/dalfox"
+license: "MIT"
+tags: ["xss", "parameter-analysis", "scanner", "injection"]
+aliases: ["dalfox"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "https://github.com/hahwul/dalfox/releases/download/v2.10.0/dalfox_2.10.0_windows_amd64.zip"
+    binary_name: "dalfox.exe"
+    checksum: "sha256:..."
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "hahwul/dalfox"
+    version: "v2.10.0"
+    extract_path: "dalfox_2.10.0_windows_amd64"
+    binary_name: "dalfox.exe"
+  - method: wsl
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "kali-linux"
+    version: "2.10.0"
+  - method: scoop
+    priority: 70
+    platforms: [windows]
+    architectures: [amd64, arm64]
+    source: "dalfox"
+    version: "2.10.0"
+post_install:
+  verify_command: "dalfox version"

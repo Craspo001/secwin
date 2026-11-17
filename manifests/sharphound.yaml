@@ -1,0 +1,29 @@
+name: sharphound
+version: "1.1.0"
+description: "C# BloodHound ingestor for Active Directory data collection"
+category: post-exploit
+homepage: "https://github.com/BloodHoundAD/BloodHound"
+repository: "https://github.com/BloodHoundAD/SharpHound"
+license: "GPL-3.0"
+tags: ["ad", "bloodhound", "ingestor", "csharp", "ldap"]
+wsl_preferred: false
+install_methods:
+  - method: github
+    priority: 100
+    platforms: [windows]
+    architectures: [amd64]
+    source: "BloodHoundAD/SharpHound"
+    version: "1.1.0"
+    extract_path: "SharpHound-1.1.0"
+    binary_name: "SharpHound.exe"
+    pre_commands:
+      - "dotnet build -c Release"
+  - method: binary
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://github.com/BloodHoundAD/SharpHound/releases/download/1.1.0/SharpHound-v1.1.0.zip"
+    binary_name: "SharpHound.exe"
+    extract_path: "SharpHound-v1.1.0"
+post_install:
+  verify_command: "SharpHound.exe --version"

@@ -1,0 +1,38 @@
+name: hashcat
+version: "6.2.6"
+description: "World's fastest password recovery utility"
+category: crypto
+homepage: "https://hashcat.net/hashcat"
+repository: "https://github.com/hashcat/hashcat"
+license: "MIT"
+tags: ["password-cracking", "gpu", "opencl", "cuda", "hash-recovery"]
+wsl_preferred: false
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: [windows, linux]
+    architectures: [amd64]
+    source: "https://hashcat.net/files/hashcat-6.2.6.7z"
+    binary_name: "hashcat.exe"
+    extract_path: "hashcat-6.2.6"
+    checksum: "sha256:..."
+  - method: scoop
+    priority: 90
+    platforms: [windows]
+    architectures: [amd64]
+    source: "hashcat"
+    version: "6.2.6"
+  - method: chocolatey
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64]
+    source: "hashcat"
+    version: "6.2.6"
+  - method: wsl
+    priority: 70
+    platforms: [windows]
+    architectures: [amd64]
+    source: "kali-linux"
+    version: "6.2.6"
+post_install:
+  verify_command: "hashcat --version"

@@ -1,0 +1,35 @@
+name: volatility
+version: "3.8.0"
+description: "Memory forensics framework"
+category: forensics
+homepage: "https://www.volatilityfoundation.org"
+repository: "https://github.com/volatilityfoundation/volatility3"
+license: "GPL-2.0"
+tags: ["memory-forensics", "ram-analysis", "malware-analysis", "python"]
+aliases: ["vol", "vol3"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "3.8.0"
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "volatilityfoundation/volatility3"
+    version: "3.8.0"
+    extract_path: "volatility3-3.8.0"
+    binary_name: "vol.py"
+    pre_commands:
+      - "pip install -r requirements.txt"
+  - method: binary
+    priority: 80
+    platforms: [windows, linux, darwin]
+    architectures: [amd64]
+    source: "https://github.com/volatilityfoundation/volatility3/archive/refs/tags/3.8.0.zip"
+    binary_name: "vol.py"
+    extract_path: "volatility3-3.8.0"
+post_install:
+  verify_command: "python vol.py --version"

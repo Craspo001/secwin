@@ -1,0 +1,42 @@
+name: nuclei
+version: "3.2.0"
+description: "Fast and customizable vulnerability scanner based on simple YAML based DSL"
+category: vuln-scanning
+homepage: "https://nuclei.projectdiscovery.io"
+repository: "https://github.com/projectdiscovery/nuclei"
+license: "MIT"
+tags: ["vulnerability-scanner", "cve", "misconfiguration", "exposed-panels", "fuzzing"]
+aliases: ["nuclei"]
+install_methods:
+  - method: binary
+    priority: 100
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "https://github.com/projectdiscovery/nuclei/releases/download/v3.2.0/nuclei_3.2.0_windows_amd64.zip"
+    binary_name: "nuclei.exe"
+    checksum: "sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+  - method: github
+    priority: 90
+    platforms: ["windows", "linux", "darwin"]
+    architectures: ["amd64", "arm64"]
+    source: "projectdiscovery/nuclei"
+    version: "v3.2.0"
+    extract_path: "nuclei_3.2.0_windows_amd64"
+    binary_name: "nuclei.exe"
+  - method: scoop
+    priority: 80
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "nuclei"
+    version: "3.2.0"
+  - method: wsl
+    priority: 70
+    platforms: ["windows"]
+    architectures: ["amd64", "arm64"]
+    source: "kali-linux"
+    version: "3.2.0"
+wsl_preferred: false
+post_install:
+  commands:
+    - "nuclei -update-templates"
+  verify_command: "nuclei -version"

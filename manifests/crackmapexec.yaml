@@ -1,0 +1,35 @@
+name: crackmapexec
+version: "1.2.0"
+description: "Post-exploitation tool for Active Directory environments"
+category: post-exploit
+homepage: "https://github.com/byt3bl33d3r/CrackMapExec"
+repository: "https://github.com/byt3bl33d3r/CrackMapExec"
+license: "BSD-3-Clause"
+tags: ["ad", "smb", "ldap", "winrm", "mssql", "post-exploitation", "kerberoasting", "asrep"]
+aliases: ["cme"]
+wsl_preferred: true
+wsl_distro: "kali-linux"
+install_methods:
+  - method: wsl
+    priority: 100
+    source: "kali-linux"
+    version: "1.2.0"
+  - method: github
+    priority: 90
+    platforms: [windows, linux, darwin]
+    architectures: [amd64, arm64]
+    source: "byt3bl33d3r/CrackMapExec"
+    version: "v1.2.0"
+    extract_path: "CrackMapExec-1.2.0"
+    binary_name: "crackmapexec.exe"
+    pre_commands:
+      - "pip install -r requirements.txt"
+  - method: binary
+    priority: 80
+    platforms: [windows]
+    architectures: [amd64]
+    source: "https://github.com/byt3bl33d3r/CrackMapExec/releases/download/v1.2.0/CrackMapExec-v1.2.0-win64.zip"
+    binary_name: "crackmapexec.exe"
+    extract_path: "CrackMapExec-v1.2.0-win64"
+post_install:
+  verify_command: "crackmapexec --version"

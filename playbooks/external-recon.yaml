@@ -1,0 +1,226 @@
+metadata:
+  name: external-recon
+  version: "1.0"
+  author: "SecWin Team"
+  description: "Full external reconnaissance pipeline: subdomain enum → port scan → service detection → tech fingerprint → screenshots"
+  mitre_tactics: ["TA0043"]
+  tags: ["recon", "external", "automated"]
+
+variables:
+  target:
+    type: string
+    required: true
+    description: "Target domain or IP range"
+  output_dir:
+    type: string
+    default: "./engagements/{{.target}}/external-recon"
+    description: "Output directory for artifacts"
+  rate_limit:
+    type: int
+    default: 1000
+    description: "Rate limit for port scanning (packets/sec)"
+  subdomain_sources:
+    type: string
+    default: "all"
+    description: "Subfinder sources to use (all, crtsh, virustotal, etc.)"
+  enable_screenshots:
+    type: boolean
+    default: true
+    description: "Capture HTTP screenshots"
+  nuclei_templates:
+    type: string
+    default: "technologies/,exposures/,misconfiguration/"
+    description: "Nuclei template directories to run"
+
+steps:
+  - id: subdomain_enum
+    name: "Subdomain Enumeration"
+    tool: subfinder
+    args:
+      - "-d"
+      - "{{.target}}"
+      - "-o"
+      - "{{.output_dir}}/subdomains.txt"
+      - "-silent"
+      - "-sources"
+      - "{{.subdomain_sources}}"
+    artifacts:
+      - "{{.output_dir}}/subdomains.txt"
+    mitre_techniques: ["T1590.005"]
+    timeout: "10m"
+
+  - id: resolve_subdomains
+    name: "Resolve Subdomains to IPs"
+    tool: httpx
+    args:
+      - "-l"
+      - "{{.output_dir}}/subdomains.txt"
+      - "-silent"
+      - "-o"
+      - "{{.output_dir}}/resolved.txt"
+      - "-json"
+    artifacts:
+      - "{{.output_dir}}/resolved.txt"
+    mitre_techniques: ["T1590.005"]
+    timeout: "5m"
+
+  - id: port_scan
+    name: "Port Scan Top 1000"
+    tool: naabu
+    args:
+      - "-list"
+      - "{{.output_dir}}/subdomains.txt"
+      - "-top-ports"
+      - "1000"
+      - "-rate"
+      - "{{.rate_limit}}"
+      - "-o"
+      - "{{.output_dir}}/ports.txt"
+      - "-silent"
+    artifacts:
+      - "{{.output_dir}}/ports.txt"
+    mitre_techniques: ["T1595.001"]
+    timeout: "30m"
+    condition: "{{.enable_screenshots}}"
+
+  - id: service_detect
+    name: "Service Detection & Version Scanning"
+    tool: nmap
+    args:
+      - "-iL"
+      - "{{.output_dir}}/ports.txt"
+      - "-sV"
+      - "-sC"
+      - "--version-intensity"
+      - "7"
+      - "-oA"
+      - "{{.output_dir}}/services"
+      - "--min-rate"
+      - "1000"
+    artifacts:
+      - "{{.output_dir}}/services.nmap"
+      - "{{.output_dir}}/services.gnmap"
+      - "{{.output_dir}}/services.xml"
+    mitre_techniques: ["T1595.002"]
+    timeout: "45m"
+
+  - id: tech_fingerprint
+    name: "Technology Fingerprinting"
+    tool: nuclei
+    args:
+      - "-l"
+      - "{{.output_dir}}/subdomains.txt"
+      - "-t"
+      - "{{.nuclei_templates}}"
+      - "-o"
+      - "{{.output_dir}}/tech.json"
+      - "-json"
+      - "-silent"
+      - "-rate-limit"
+      - "100"
+    artifacts:
+      - "{{.output_dir}}/tech.json"
+    mitre_techniques: ["T1590.001"]
+    timeout: "20m"
+
+  - id: http_probe
+    name: "HTTP Service Probing"
+    tool: httpx
+    args:
+      - "-l"
+      - "{{.output_dir}}/subdomains.txt"
+      - "-status-code"
+      - "-title"
+      - "-tech-detect"
+      - "-cdn"
+      - "-web-server"
+      - "-method"
+      - "-content-length"
+      - "-o"
+      - "{{.output_dir}}/http_probe.txt"
+      - "-json"
+      - "-silent"
+    artifacts:
+      - "{{.output_dir}}/http_probe.txt"
+    mitre_techniques: ["T1590.001"]
+    timeout: "15m"
+
+  - id: screenshots
+    name: "HTTP Screenshots"
+    tool: httpx
+    args:
+      - "-l"
+      - "{{.output_dir}}/subdomains.txt"
+      - "-screenshot"
+      - "-store-response"
+      - "-store-chain"
+      - "-o"
+      - "{{.output_dir}}/http_screenshots.txt"
+      - "-json"
+      - "-silent"
+    artifacts:
+      - "{{.output_dir}}/screenshots/*"
+      - "{{.output_dir}}/http_screenshots.txt"
+    mitre_techniques: ["T1590.001"]
+    timeout: "10m"
+    condition: "{{.enable_screenshots}}"
+
+  - id: directory_fuzz
+    name: "Directory Fuzzing (Top Targets)"
+    tool: ffuf
+    args:
+      - "-w"
+      - "/usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt"
+      - "-u"
+      - "FUZZ"
+      - "-mc"
+      - "200,204,301,302,307,401,403"
+      - "-t"
+      - "50"
+      - "-o"
+      - "{{.output_dir}}/dir_fuzz.json"
+      - "-of"
+      - "json"
+    artifacts:
+      - "{{.output_dir}}/dir_fuzz.json"
+    mitre_techniques: ["T1590.004"]
+    timeout: "30m"
+    foreach:
+      variable: "target_url"
+      in: "{{.output_dir}}/http_probe.txt"
+      steps:
+        - id: fuzz_single
+          name: "Fuzz {{.target_url}}"
+          tool: ffuf
+          args:
+            - "-w"
+            - "/usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt"
+            - "-u"
+            - "{{.target_url}}/FUZZ"
+            - "-mc"
+            - "200,204,301,302,307,401,403"
+            - "-t"
+            - "20"
+            - "-o"
+            - "{{.output_dir}}/dir_fuzz_{{.index}}.json"
+            - "-of"
+            - "json"
+
+outputs:
+  findings: "{{.output_dir}}/findings.json"
+  report: "{{.output_dir}}/report.html"
+  evidence_dir: "{{.output_dir}}"
+
+hooks:
+  pre_step:
+    - tool: echo
+      args: ["Starting step: {{.step.id}}"]
+  post_step:
+    - tool: echo
+      args: ["Completed step: {{.step.id}}"]
+  on_failure:
+    - tool: echo
+      args: ["Step failed: {{.step.id}} - {{.error}}"]
+  on_success:
+    - tool: echo
+      args: ["Playbook completed successfully"]

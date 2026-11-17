@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "identifier": "shell-permissions",
+  "description": "Shell permissions for SecWin CLI",
+  "windows": ["main"],
+  "permissions": [
+    "shell:allow-run-secwin",
+    "shell:allow-run-powershell",
+    "shell:allow-run-cmd"
+  ]
+}
