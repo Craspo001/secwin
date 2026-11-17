@@ -59,7 +59,7 @@ jobs:
           GOARCH=${{ matrix.arch }} \
           go build -ldflags="-s -w" -o bin/secwin_${{ matrix.os }}_${{ matrix.arch }}${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./cmd/secwin
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: secwin-${{ matrix.os }}-${{ matrix.arch }}
           path: bin/secwin_*
