@@ -17,12 +17,13 @@ import (
 )
 
 type BenchmarkConfig struct {
-	Iterations      int      `json:"iterations"`
-	Playbooks       []string `json:"playbooks"`
-	IncludeInstall  bool     `json:"include_install"`
-	IncludeWSL      bool     `json:"include_wsl"`
-	OutputDir       string   `json:"output_dir"`
-	Parallel        int      `json:"parallel"`
+	Iterations      int               `json:"iterations"`
+	Playbooks       []string          `json:"playbooks"`
+	IncludeInstall  bool              `json:"include_install"`
+	IncludeWSL      bool              `json:"include_wsl"`
+	OutputDir       string            `json:"output_dir"`
+	Parallel        int               `json:"parallel"`
+	Variables       map[string]string `json:"variables,omitempty"`
 }
 
 type BenchmarkResult struct {
@@ -184,6 +185,10 @@ func (br *BenchmarkRunner) runSingleIteration(playbookName string, iteration int
 
 	// Build command args
 	args := []string{"playbook", "run", playbookName}
+	// Add variables
+	for k, v := range br.config.Variables {
+		args = append(args, "--var", fmt.Sprintf("%s=%s", k, v))
+	}
 	// Note: playbook run doesn't support --skip-install or --wsl flags
 	// Those are handled by the playbook's own tool configuration
 

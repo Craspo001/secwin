@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { Search, Filter, Brain, Download, RotateCcw, AlertTriangle, CheckCircle, XCircle, Info, Loader2, Zap, Shield } from 'lucide-react';
+import { Search, Brain, RotateCcw, AlertTriangle, CheckCircle, XCircle, Info, Zap, Shield } from 'lucide-react';
 import { useFindings, useOllama } from '../hooks/useSecWin';
 import { cn, getSeverityColor, truncate } from '../lib/utils';
 
 const severityOrder = { critical: 0, high: 1, medium: 2, low: 3, info: 4 };
 
 export function FindingsDashboard() {
-  const { findings, setFindings, triage, loading: triageLoading, error: triageError } = useFindings();
-  const { models, connected, loading: ollamaLoading, checkConnection } = useOllama();
+  const { findings, triage, loading: triageLoading, error: triageError } = useFindings();
+  const { connected, loading: ollamaLoading, checkConnection } = useOllama();
   const [filter, setFilter] = useState('');
   const [severityFilter, setSeverityFilter] = useState<string[]>([]);
   const [triageResults, setTriageResults] = useState<Map<string, any>>(new Map());
   const [selectedFinding, setSelectedFinding] = useState<typeof findings[0] | null>(null);
-  const [triageModel, setTriageModel] = useState<string>('');
+  const [triageModel] = useState<string>('');
 
   const filteredFindings = findings
     .filter(f => {
@@ -44,10 +44,10 @@ export function FindingsDashboard() {
     const result = triageResults.get(findingId);
     if (!result) return null;
     switch (result.classification) {
-      case 'true_positive': return <CheckCircle className="h-3 w-3 text-green-600" title="True Positive" />;
-      case 'false_positive': return <XCircle className="h-3 w-3 text-red-600" title="False Positive" />;
-      case 'informational': return <Info className="h-3 w-3 text-blue-600" title="Informational" />;
-      default: return <AlertTriangle className="h-3 w-3 text-yellow-600" title="Unknown" />;
+      case 'true_positive': return <CheckCircle className="h-3 w-3 text-green-600" />;
+      case 'false_positive': return <XCircle className="h-3 w-3 text-red-600" />;
+      case 'informational': return <Info className="h-3 w-3 text-blue-600" />;
+      default: return <AlertTriangle className="h-3 w-3 text-yellow-600" />;
     }
   };
 

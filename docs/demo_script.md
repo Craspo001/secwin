@@ -1,337 +1,286 @@
-# SecWin Demo Script
+# SecWin Phase 4 Demo Video Script
 
-**Duration**: 10-15 minutes  
-**Audience**: Technical (security professionals, evaluators)  
-**Format**: Live terminal + GUI walkthrough
+**Duration Target**: 10-15 minutes  
+**Format**: Screen recording with voiceover  
+**Resolution**: 1920x1080 minimum  
 
 ---
 
-## 0. Prerequisites (Pre-demo Setup)
+## Pre-Recording Checklist
+
+- [ ] Start Ollama: `ollama serve` (in background terminal)
+- [ ] Pull model: `ollama pull llama3.1`
+- [ ] Have SecWin CLI in PATH: `secwin --version`
+- [ ] Build Tauri app: `cd gui && npm run tauri:build` (requires Rust)
+- [ ] Prepare test target (local VM or authorized scope)
+- [ ] Clean engagement directory for fresh demo
+
+---
+
+## Scene 1: Introduction (30 seconds)
+
+### Visual
+- Title card: "SecWin Phase 4: GUI, AI Triage & Benchmarks"
+- Terminal showing `secwin --version`
+- Quick montage of GUI screens
+
+### Voiceover
+> "SecWin is a unified security toolchain for Windows penetration testers. Phase 4 introduces three major capabilities: a native Tauri GUI, local AI-powered finding triage via Ollama, and automated performance benchmarking. Let's see them in action."
+
+---
+
+## Scene 2: Tauri GUI Overview (2 minutes)
+
+### Visual
+- Launch SecWin GUI (double-click or `tauri dev`)
+- Dashboard loads with system info
+- Navigate through sidebar: Dashboard → Playbooks → Tools → Profiles → Evidence → AI Triage → Benchmarks → Settings
+
+### Voiceover
+> "The SecWin GUI is built with Tauri 2, React, and TypeScript. It provides a modern interface for all SecWin operations. The dashboard shows system status — SecWin version, WSL availability, Ollama connectivity — and quick stats for playbooks, tools, profiles, and evidence."
+
+### Key Shots
+- System info card (OS, version, WSL, Ollama)
+- Stats cards with live data
+- Sidebar navigation smooth transitions
+
+---
+
+## Scene 3: Playbook Execution (3 minutes)
+
+### Visual
+1. Click "Playbooks" in sidebar
+2. Search "external-recon"
+3. Click "Run" on external-recon playbook
+4. Fill variables: target=demo.example.com, output_dir=./engagements/demo
+5. Click "Run Playbook" → navigates to Run Status
+6. Show live progress: step-by-step execution
+7. Wait for completion
+8. Click "View Report" → opens HTML report
+
+### Voiceover
+> "Playbooks are YAML-defined engagement workflows. Here we run the external reconnaissance playbook against a demo target. Variables are type-aware — strings, numbers, booleans, enums. The run status page shows real-time progress with step names, completion percentage, and live tool output. On completion, reports are generated in HTML, Markdown, and PDF formats with MITRE ATT&CK mappings."
+
+### Key Shots
+- Variable input form with validation
+- Live progress bar and step list
+- HTML report with findings, evidence, ATT&CK badges
+
+---
+
+## Scene 4: OpSec Profile Management (1.5 minutes)
+
+### Visual
+1. Navigate to Profiles
+2. Click "Create Profile" → name: "demo-engagement"
+3. Configure: VPN config, MAC spoof, hostname, timezone, DNS, proxy
+4. Save → shows in list
+5. Click "Engage" → shows loading, then active
+6. Navigate to Dashboard → shows active profile badge
+7. Click "Disengage" → restores original state
+
+### Voiceover
+> "OpSec profiles isolate your operational environment. One click engages VPN, spoofs MAC, changes hostname, sets timezone, configures DNS and proxy — all with automatic state persistence for clean disengagement. The dashboard always shows your current OpSec status."
+
+---
+
+## Scene 5: Evidence Locker (1.5 minutes)
+
+### Visual
+1. Navigate to Evidence
+2. Load default evidence directory
+3. Show artifact list with SHA256, size, step ID
+4. Click "Verify All" → shows PASSED/FAILED
+5. Click "Export Manifest" → downloads JSON
+6. Open manifest in editor to show structure
+
+### Voiceover
+> "The Evidence Locker automatically collects artifacts from playbook runs. Each artifact is SHA256-hashed for integrity verification. Bulk verification detects tampering. Manifests export as JSON or YAML for chain-of-custody documentation."
+
+---
+
+## Scene 6: AI Triage with Ollama (3 minutes)
+
+### Visual
+1. Navigate to AI Triage
+2. Settings → Ollama tab → verify model (llama3.1)
+3. Back to AI Triage → click "Load Samples"
+4. Show sample findings (SQLi, Outdated OpenSSL, Missing Headers)
+5. Add context: "External penetration test, scope: demo.example.com, no DoS"
+6. Click "Run AI Triage" → show loading spinner
+7. Results appear:
+   - Overall risk score (e.g., 7.2/10)
+   - Executive summary
+   - Per-finding cards with severity, confidence, analysis
+   - MITRE tags, remediation, false positive likelihood
+8. Click "Download" → save JSON
+
+### Voiceover
+> "AI Triage uses local Ollama models — no data leaves your machine. Paste findings JSON or load from evidence. The model reassesses severity, provides confidence scores, maps to MITRE ATT&CK techniques, and suggests specific remediation steps. The executive summary and risk score help prioritize reporting."
+
+### Key Shots
+- Model selection dropdown
+- Sample findings JSON
+- Triage results with color-coded severity badges
+- MITRE technique pills
+- Raw JSON toggle
+
+---
+
+## Scene 7: Benchmarks (2.5 minutes)
+
+### Visual
+1. Navigate to Benchmarks
+2. Configure: 3 iterations, select "external-recon" and "web-app-test"
+3. Enable "Test WSL execution"
+4. Click "Start Benchmark"
+5. Show live progress: iteration counter, elapsed time, pass/fail
+6. Wait for completion
+7. Results: summary cards (success rate, avg duration, total time)
+8. Per-playbook comparison table
+9. Click "Export" → download JSON
+10. (Optional) Run second benchmark, then compare → show regression detection
+
+### Voiceover
+> "Benchmarks run playbooks, tools, or installations multiple times to detect performance regressions. Configure iterations, select playbooks, choose WSL vs native comparison. Live progress shows real-time stats. Results include statistical aggregates and per-iteration details. Export JSON for CI/CD integration. Compare baseline vs current to catch regressions automatically."
+
+### Key Shots
+- Configuration form
+- Live progress with animated spinner
+- Summary statistics cards
+- Comparison table with color-coded diff percentages
+
+---
+
+## Scene 8: Settings & Configuration (1 minute)
+
+### Visual
+1. Navigate to Settings
+2. General tab: auto-refresh, notifications, retention
+3. Appearance tab: light/dark/system theme
+4. SecWin CLI tab: detected version, path, quick actions
+5. Ollama tab: URL, model, test connection, model list
+6. Advanced tab: version info, links
+
+### Voiceover
+> "Settings persist to localStorage and Tauri config. Configure Ollama endpoint and default model. Test connectivity. Switch themes. View system diagnostics. All configuration is local — no cloud dependencies."
+
+---
+
+## Scene 9: CLI Parity (1 minute)
+
+### Visual
+- Split screen: GUI on left, terminal on right
+- Run same playbook via CLI: `secwin playbook run external-recon --target demo.example.com`
+- Show identical output, same evidence, same reports
+- Demonstrate `secwin profile engage demo-engagement` from CLI
+
+### Voiceover
+> "The GUI and CLI share the same core. Every GUI action maps to a CLI command. Use whichever fits your workflow — or both. Automation scripts use the CLI; interactive analysis uses the GUI."
+
+---
+
+## Scene 10: Conclusion (30 seconds)
+
+### Visual
+- Montage: Dashboard → Playbook Run → AI Triage → Benchmarks
+- Text: "SecWin Phase 4 Complete"
+- Links: GitHub, Documentation, Releases
+
+### Voiceover
+> "SecWin Phase 4 delivers a complete security operations platform: native GUI, local AI triage, and performance benchmarking — all built on a solid CLI foundation. Try it today at github.com/secwin/secwin."
+
+---
+
+## Post-Production Notes
+
+### Editing
+- Speed up long waits (benchmark runs, AI triage) with time-lapse
+- Add captions for key commands and file paths
+- Zoom on important UI elements (severity badges, MITRE tags)
+- Background music: subtle, non-distracting
+
+### Thumbnail
+- SecWin logo + "Phase 4: GUI + AI + Benchmarks"
+- Screenshot of dashboard with AI Triage highlighted
+
+### Description Template
+```
+SecWin Phase 4 Demo — Modern Kali Tooling on Windows
+
+🔧 Tauri GUI (React + Rust)
+🤖 Ollama AI Finding Triage (local, private)
+📊 Automated Performance Benchmarks
+
+Chapters:
+0:00 Introduction
+0:30 GUI Overview
+2:30 Playbook Execution
+5:30 OpSec Profiles
+7:00 Evidence Locker
+8:30 AI Triage
+11:30 Benchmarks
+14:00 Settings & CLI Parity
+15:00 Conclusion
+
+Links:
+- GitHub: https://github.com/secwin/secwin
+- Docs: https://github.com/secwin/secwin/docs
+- Releases: https://github.com/secwin/secwin/releases
+
+#SecWin #PenetrationTesting #RedTeam #Windows #Tauri #Ollama #AI
+```
+
+---
+
+## Alternative: Short Demo (3 minutes)
+
+For social media / conference lightning talk:
+
+| Segment | Duration |
+|---------|----------|
+| Hook: "One tool to rule them all" | 15s |
+| GUI launch + dashboard | 30s |
+| Playbook run (timelapse) | 45s |
+| AI Triage results | 45s |
+| Benchmark comparison | 30s |
+| CLI parity + links | 15s |
+
+---
+
+## Recording Commands Reference
 
 ```bash
-# Start Ollama (if not running)
-ollama serve &
-ollama pull llama3.2:3b
+# Terminal 1: Ollama
+ollama serve
 
-# Verify SecWin installed
+# Terminal 2: Pull model (if needed)
+ollama pull llama3.1
+
+# Terminal 3: SecWin CLI (verify)
 secwin --version
-
-# Quick config check
-secwin config show
-```
-
----
-
-## 1. Project Overview (1 min)
-
-**Talking Points**:
-- "SecWin brings Kali Linux tooling to Windows natively"
-- "Manifest-driven: 55 tools, 6 install backends"
-- "Playbook DSL with parallel/foreach/if/try-catch"
-- "OpSec profiles: engage/disengage in seconds"
-- "Evidence locker with SHA256 + chain of custody"
-- "AI triage via local Ollama (no cloud)"
-
-**Show**: Architecture diagram from README
-
----
-
-## 2. Tool Installation Demo (2 min)
-
-### 2.1 Search & Install
-
-```bash
-# Search available tools
-secwin search nmap
-secwin search --category recon
-
-# Install multiple tools (parallel)
-secwin install nmap nuclei subfinder httpx naabu
-
-# Verify installation
-secwin list --installed
-nmap --version
-nuclei -version
-```
-
-**Expected**: Sub-second installs for binary tools, ~2s for Scoop
-
-### 2.2 WSL Tool Install
-
-```bash
-# Install Linux-only tool via WSL
-secwin install bloodhound --method wsl
-
-# Verify in WSL
-wsl -d kali-linux -- which bloodhound-python
-```
-
-**Talking Point**: "Same command, different backend — abstracted away"
-
----
-
-## 3. OpSec Profile Demo (2 min)
-
-### 3.1 Create Profile
-
-```bash
-# Interactive profile creation
-secwin profile create demo-profile
-# Or show existing
-secwin profile list
-```
-
-### 3.2 Engage/Disengage
-
-```bash
-# Show current state
-secwin profile status
-
-# Engage (3.5 seconds)
-secwin profile engage demo-profile
-
-# Verify changes
-Get-NetAdapter | Select-Object Name, MacAddress
-tzutil /g
-$env:HTTP_PROXY
-
-# Disengage (clean rollback)
-secwin profile disengage
-
-# Verify restored
-Get-NetAdapter | Select-Object Name, MacAddress
-```
-
-**Talking Point**: "Full isolation in 3.5s, perfect rollback — critical for professional engagements"
-
----
-
-## 4. Playbook Execution Demo (4 min)
-
-### 4.1 List Playbooks
-
-```bash
 secwin playbook list
-secwin playbook show external-recon
-```
 
-### 4.2 Run Playbook (CLI)
+# Terminal 4: Tauri dev (if not built)
+cd gui && npm run tauri:dev
 
-```bash
-# Dry run first
-secwin playbook run external-recon --target example.com --dry-run
-
-# Actual run with variables
-secwin playbook run external-recon \
-  --target example.com \
-  --var rate_limit=50 \
-  --output ./engagement-001
-```
-
-**Show**: Real-time terminal output with step progress
-
-### 4.3 Run Playbook (GUI)
-
-1. Launch GUI: `secwin gui`
-2. Navigate to **Playbook Runner**
-3. Select `external-recon`
-4. Fill variables: `target=example.com`, `rate_limit=50`
-5. Click **Run** — show live terminal streaming
-6. Show step progress indicators
-7. Abort mid-run, show resume capability
-
-**Talking Points**:
-- "Parallel execution: httpx + dnsx + testssl simultaneously"
-- "Foreach: iterate subdomains for nuclei scans"
-- "If/else: only exploit if vulns found"
-- "Try/catch: fallback on failure, finally for cleanup"
-
-### 4.4 View Results
-
-```bash
-# List evidence
-secwin evidence list ./engagement-001/evidence
-
-# Verify integrity
-secwin evidence verify ./engagement-001/evidence
-
-# View report
-cat ./engagement-001/report.md
-# Or open HTML
-start ./engagement-001/report.html
+# Or run built app
+./gui/src-tauri/target/release/secwin-gui.exe
 ```
 
 ---
 
-## 5. Evidence Locker Demo (1.5 min)
+## Troubleshooting
 
-```bash
-# Show evidence structure
-tree ./engagement-001/evidence
-
-# Verify specific artifact
-secwin evidence show ./engagement-001/evidence/001_recon_subdomains.txt
-
-# Export chain of custody
-secwin evidence export ./engagement-001/evidence --format json -o coc.json
-cat coc.json | jq .
-```
-
-**Talking Points**:
-- "Automatic SHA256 on every artifact"
-- "Chain-of-custody manifest with timestamps"
-- "Verification detects any tampering"
-- "Export for compliance/audit"
+| Issue | Solution |
+|-------|----------|
+| Ollama connection failed | Check `ollama serve` running, port 11434 |
+| Model not found | `ollama pull llama3.1` |
+| GUI blank/white screen | Check console for errors, rebuild `npm run build` |
+| Playbook fails | Verify tools installed: `secwin install @core` |
+| Benchmark hangs | Reduce iterations, check tool availability |
+| WSL not detected | Enable WSL2, install Kali: `wsl --install -d Kali` |
 
 ---
 
-## 6. AI Triage Demo (2 min)
-
-### 6.1 Check Ollama
-
-```bash
-secwin ai check
-```
-
-### 6.2 Triage Findings
-
-```bash
-# From playbook output
-secwin ai triage ./engagement-001/findings.json \
-  --context "External recon for example.com, authorized scope" \
-  --format table
-```
-
-### 6.3 Show Results
-
-**Expected Output**:
-```
-TITLE                              CLASSIFICATION      CONF SEVERITY   TOOL      CACHE  RULES
------------------------------------------------------------------------------------------------
-Subdomain takeover risk            true_positive        92% high       nuclei    false  false
-Open port 22/tcp                   informational        65% info       nmap      false  false
-SSL cert expires in 30 days        informational        78% low        testssl   false  false
-Potential SQL injection            false_positive       88% info       nuclei    false  false
-Default credentials on admin       true_positive        98% critical   crackmape false  true
-```
-
-**Talking Points**:
-- "Runs locally — findings never leave machine"
-- "0.85 F1 on 500 real findings"
-- "Rule fallback: CVE refs, RCE keywords, default creds"
-- "Batch 10 at a time, ~8 findings/sec on CPU"
-
----
-
-## 7. Reporting Demo (1.5 min)
-
-```bash
-# Generate HTML report (default)
-secwin report generate ./engagement-001 --format html -o final_report.html
-
-# Generate Markdown for version control
-secwin report generate ./engagement-001 --format markdown -o final_report.md
-
-# Generate PDF (requires wkhtmltopdf)
-secwin report generate ./engagement-001 --format pdf -o final_report.pdf
-```
-
-**Open HTML Report** — Show:
-- Executive summary
-- MITRE ATT&CK technique badges (clickable to ATT&CK Navigator)
-- Findings table with severity colors
-- Evidence cross-references
-- Appendix with raw artifacts
-
----
-
-## 8. Benchmark Demo (1 min)
-
-```bash
-# Quick system benchmark
-secwin benchmark system --duration 5s
-
-# Tool installation benchmark
-secwin benchmark install nmap nuclei --iterations 3
-
-# Playbook benchmark
-secwin benchmark playbook external-recon --iterations 2
-```
-
-**Show**: Comparison table output
-
----
-
-## 9. GUI Full Tour (2 min)
-
-**Navigate through all tabs**:
-
-1. **Dashboard**: System status, WSL, Ollama, recent runs
-2. **Playbook Runner**: Variable form, live output, history
-3. **Profile Manager**: Create/edit, engage/disengage buttons
-4. **Evidence Viewer**: Tree, verification, artifact details
-5. **Findings Dashboard**: Sortable table, AI triage batch, filters
-6. **Settings**: Config editor, tool management, paths
-
-**Highlight**: "Native feel, dark mode, responsive, <15 MB"
-
----
-
-## 10. Q&A Preparation
-
-### Common Questions
-
-| Question | Answer |
-|----------|--------|
-| "Does it work offline?" | Yes — all features except remote manifest updates |
-| "Can I add custom tools?" | Yes — drop YAML in `~/.secwin/manifests/` |
-| "What about macOS/Linux?" | CLI works natively; GUI via Tauri (planned) |
-| "How does it compare to Kali VM?" | 2.9-3.1% overhead, no VM resource tax |
-| "Is AI required?" | No — rule engine fallback, fully optional |
-| "Can I use my own playbooks?" | Yes — `secwin playbook run ./my-playbook.yaml` |
-| "Enterprise features?" | RBAC, audit logging, policy engine (roadmap) |
-| "License?" | MIT — free for any use |
-
----
-
-## 11. Cleanup
-
-```bash
-# Disengage any active profile
-secwin profile disengage
-
-# Clean demo artifacts
-rm -rf ./engagement-001 ./coc.json ./final_report.*
-```
-
----
-
-## Appendix: Demo Environment Checklist
-
-- [ ] Windows 10/11 with WSL2 + Kali Linux installed
-- [ ] SecWin built and in PATH
-- [ ] Ollama running with llama3.2:3b pulled
-- [ ] Internet access (for tool downloads)
-- [ ] Terminal: Windows Terminal or PowerShell 7+
-- [ ] Browser for HTML report viewing
-- [ ] `wkhtmltopdf` installed (for PDF demo)
-- [ ] Demo target domain authorized (example.com or test lab)
-
----
-
-## Timing Summary
-
-| Section | Time |
-|---------|------|
-| Overview | 1:00 |
-| Tool Install | 2:00 |
-| OpSec Profile | 2:00 |
-| Playbook Execution | 4:00 |
-| Evidence Locker | 1:30 |
-| AI Triage | 2:00 |
-| Reporting | 1:30 |
-| Benchmarks | 1:00 |
-| GUI Tour | 2:00 |
-| **Total** | **~17:00** |
-
-**Tip**: Skip benchmarks/GUI tour if time-constrained (core demo ~12 min)
+*Script Version 1.0 — November 2026*

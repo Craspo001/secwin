@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Mutex;
-use tauri::{command, Manager, State};
+use tauri::{command, State};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use walkdir::WalkDir;
@@ -36,7 +36,8 @@ struct Variable {
     description: Option<String>,
     validation: Option<String>,
     secret: Option<bool>,
-    enum: Option<Vec<String>>,
+    #[serde(rename = "enum")]
+    r#enum: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -55,8 +56,8 @@ struct Step {
     continue_on_error: Option<bool>,
     parallel: Option<Vec<Step>>,
     foreach: Option<ForeachSpec>,
-    if: Option<IfSpec>,
-    try: Option<TrySpec>,
+    r#if: Option<IfSpec>,
+    r#try: Option<TrySpec>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -71,7 +72,7 @@ struct ForeachSpec {
 struct IfSpec {
     condition: String,
     then: Vec<Step>,
-    else: Option<Vec<Step>>,
+    r#else: Option<Vec<Step>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -141,7 +142,7 @@ struct Finding {
 }
 
 // Profile structures
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct Profile {
     name: String,
     vpn_config: Option<String>,
@@ -215,7 +216,7 @@ struct SystemStatus {
 
 // AI Triage structures
 #[derive(Debug, Serialize, Deserialize)]
-struct AI_TriageResult {
+struct AiTriageResult {
     finding_id: String,
     classification: String,
     confidence: f64,
@@ -287,7 +288,7 @@ async fn load_playbook(name: String) -> Result<Playbook, String> {
 }
 
 #[command]
-async fn run_playbook(playbook: Playbook, variables: HashMap<String, serde_json::Value>) -> Result<PlaybookResult, String> {
+async fn run_playbook(_playbook: Playbook, _variables: HashMap<String, serde_json::Value>) -> Result<PlaybookResult, String> {
     // This would integrate with the actual Go executor
     // For now, return a mock result
     Ok(PlaybookResult {
@@ -410,7 +411,7 @@ async fn list_tools() -> Result<Vec<ToolManifest>, String> {
 }
 
 #[command]
-async fn install_tool(name: String) -> Result<(), String> {
+async fn install_tool(_name: String) -> Result<(), String> {
     // Would integrate with actual installer
     Ok(())
 }
@@ -511,7 +512,7 @@ async fn verify_evidence(dir: Option<String>) -> Result<serde_json::Value, Strin
 
 #[command]
 async fn export_evidence_manifest(dir: Option<String>, format: Option<String>) -> Result<String, String> {
-    let artifacts = list_evidence(dir).await?;
+    let artifacts = list_evidence(dir.clone()).await?;
     let manifest = serde_json::json!({
         "generated_at": chrono::Utc::now().to_rfc3339(),
         "evidence_dir": dir.unwrap_or_else(|| "~/.secwin/evidence".to_string()),
@@ -577,10 +578,10 @@ async fn check_wsl() -> Result<serde_json::Value, String> {
 }
 
 #[command]
-async fn triage_findings(findings: Vec<Finding>, model: Option<String>) -> Result<Vec<AI_TriageResult>, String> {
+async fn triage_findings(findings: Vec<Finding>, _model: Option<String>) -> Result<Vec<AiTriageResult>, String> {
     // This would call Ollama API
     // For now, return mock results
-    let results: Vec<AI_TriageResult> = findings.into_iter().map(|f| AI_TriageResult {
+    let results: Vec<AiTriageResult> = findings.into_iter().map(|f| AiTriageResult {
         finding_id: f.id,
         classification: "true_positive".to_string(),
         confidence: 0.85,
@@ -604,7 +605,7 @@ async fn check_ollama_connection() -> Result<serde_json::Value, String> {
     match client.get("http://localhost:11434/api/tags").send().await {
         Ok(resp) if resp.status().is_success() => {
             let json: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
-            let models = json["models"].as_array()
+            let models: Vec<String> = json["models"].as_array()
                 .map(|arr| arr.iter().filter_map(|m| m["name"].as_str()).map(String::from).collect())
                 .unwrap_or_default();
             Ok(serde_json::json!({
@@ -632,7 +633,6 @@ fn get_opsec_status() -> serde_json::Value {
     })
 }
 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
@@ -665,4 +665,8 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn main() {
+    run();
 }

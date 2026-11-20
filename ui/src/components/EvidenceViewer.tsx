@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { FolderOpen, FileText, Search, Shield, Download, RotateCcw, CheckCircle, XCircle, AlertCircle, Loader2, Eye, Copy } from 'lucide-react';
+import { FolderOpen, FileText, Shield, Download, RotateCcw, CheckCircle, XCircle, AlertCircle, Loader2, Eye, Copy } from 'lucide-react';
 import { useEvidence } from '../hooks/useSecWin';
 import { cn, formatBytes, formatDate, truncate } from '../lib/utils';
 

@@ -29,43 +29,34 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "icons/32x32.png",
+      "icons/icon.svg",
+      "icons/icon.ico",
       "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
+      "icons/256x256.png",
+      "icons/icon.icns"
     ],
     "windows": {
-      "certificateThumbprint": null,
-      "digestAlgorithm": "sha256",
-      "timestampUrl": ""
-    }
-  },
-  "plugins": {
-    "dialog": {
-      "all": true
+      "wix": {
+        "language": "en-US",
+        "template": "templates/wix/template.wxs"
+      },
+      "nsis": {
+        "installerIcon": "icons/icon.ico"
+      }
     },
-    "fs": {
-      "all": true,
-      "scope": ["$APPDATA/**", "$HOME/**", "$TEMP/**"]
+    "macOS": {
+      "entitlements": "entitlements.plist",
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": "SecWin",
+      "signingIdentity": null
     },
-    "shell": {
-      "all": true,
-      "open": true,
-      "scope": {
-        "allow": [
-          "secwin*",
-          "cmd*",
-          "powershell*",
-          "wsl*",
-          "nmap*",
-          "nuclei*",
-          "subfinder*",
-          "httpx*",
-          "naabu*",
-          "ffuf*",
-          "gobuster*"
-        ]
+    "linux": {
+      "deb": {
+        "depends": ["libwebkit2gtk-4.1-0", "libayatana-appindicator3-1", "librsvg2-common"]
+      },
+      "appimage": {
+        "bundleMediaFramework": false
       }
     }
   }

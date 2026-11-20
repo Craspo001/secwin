@@ -62,6 +62,7 @@ export function useRunPlaybook() {
     setRunning(true);
     setError(null);
     setResult(null);
+    setProgress({ step: 'Initializing...', output: '' });
     try {
       const res = await api.runPlaybook(playbook, variables);
       setResult(res);
@@ -72,6 +73,7 @@ export function useRunPlaybook() {
       throw e;
     } finally {
       setRunning(false);
+      setProgress(null);
     }
   }, []);
 

@@ -5,7 +5,7 @@
   "identifier": "com.secwin.app",
   "build": {
     "beforeDevCommand": "npm run dev",
-    "devUrl": "http://localhost:1420",
+    "devUrl": "http://127.0.0.1:1420",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
@@ -17,7 +17,8 @@
         "height": 900,
         "minWidth": 1000,
         "minHeight": 700,
-        "center": true
+        "center": true,
+        "devtools": true
       }
     ],
     "security": {
@@ -26,20 +27,18 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all"
+    "targets": "all",
+    "icon": [
+      "icons/icon.ico",
+      "icons/icon.png"
+    ]
   },
   "plugins": {
     "shell": {
       "open": true
     },
     "fs": {
-      "scope": {
-        "allow": [
-          "$HOME/.secwin/**",
-          "$APPDATA/secwin/**",
-          "$TEMP/secwin/**"
-        ]
-      }
+      "requireLiteralLeadingDot": false
     }
   }
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, Terminal, Shield, FolderOpen, Brain, Save, RotateCcw, CheckCircle, XCircle, Loader2, Download, Upload } from 'lucide-react';
+import { Settings, Terminal, Shield, FolderOpen, Brain, RotateCcw, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { useTools, useSystemStatus } from '../hooks/useSecWin';
 import { cn } from '../lib/utils';
 
@@ -11,7 +11,7 @@ const tabs = [
   { id: 'ai', label: 'AI Triage', icon: Brain },
 ];
 
-export function Settings() {
+export function SettingsComponent() {
   const { tools, loading: toolsLoading, search, install, reload: reloadTools } = useTools();
   const { status, loading: statusLoading, reload: reloadStatus } = useSystemStatus();
   const [activeTab, setActiveTab] = useState('general');
@@ -329,7 +329,7 @@ export function Settings() {
                   <option value="codellama">codellama</option>
                   <option value="phi3">phi3</option>
                 </select>
-                <p className="text-sm text-muted-foreground">Models must be pulled in Ollama first: <code>ollama pull <model></code></p>
+                <p className="text-sm text-muted-foreground">Models must be pulled in Ollama first: <code>{'`ollama pull <model>`'}</code></p>
               </div>
               <div className="border-t pt-4">
                 <h3 className="font-medium mb-2">Triage Features</h3>
@@ -384,3 +384,5 @@ export function Settings() {
     </div>
   );
 }
+
+

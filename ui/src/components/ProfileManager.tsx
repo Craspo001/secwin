@@ -302,7 +302,7 @@ export function ProfileManager() {
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   className="input"
                   required
-                  disabled={editingProfile}
+                  disabled={!!editingProfile}
                 />
                 {editingProfile && <p className="text-xs text-muted-foreground">Name cannot be changed</p>}
               </div>

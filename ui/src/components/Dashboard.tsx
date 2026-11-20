@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSystemStatus } from '../hooks/useSecWin';
 import { useProfiles } from '../hooks/useSecWin';
 import { useTools } from '../hooks/useSecWin';
-import { cn, formatBytes } from '../lib/utils';
+import { cn } from '../lib/utils';
 
 const quickActions = [
   { name: 'Run Playbook', href: '/playbooks', icon: Play, description: 'Execute security engagement playbooks', color: 'bg-primary/10 text-primary' },
@@ -24,10 +24,9 @@ const stats = [
 export function Dashboard() {
   const { status, loading: statusLoading, error: statusError, reload: reloadStatus } = useSystemStatus();
   const { activeProfile, profiles, loading: profilesLoading } = useProfiles();
-  const { tools, loading: toolsLoading } = useTools();
+  const { tools } = useTools();
 
   const toolsCount = tools.length;
-  const evidenceCount = 0; // Would come from useEvidence hook
 
   if (statusLoading) {
     return (

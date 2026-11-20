@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/plugin-fs';
-import { Command, CommandEvent } from '@tauri-apps/plugin-shell';
+import { Command } from '@tauri-apps/plugin-shell';
 
 export interface Playbook {
   metadata: {
@@ -184,6 +184,15 @@ export interface SystemStatus {
   active_profile?: string;
 }
 
+export interface OpSecStatus {
+  vpn: string;
+  mac_spoof: boolean;
+  hostname: string;
+  timezone: string;
+  dns: string;
+  proxy: string;
+}
+
 export interface AI_TriageResult {
   finding_id: string;
   classification: 'true_positive' | 'false_positive' | 'informational' | 'unknown';
@@ -308,8 +317,7 @@ export const dialog = {
 // Shell command execution for real-time output
 export const shell = {
   async runCommand(command: string, args: string[], cwd?: string): Promise<{ stdout: string; stderr: string; code: number }> {
-    const cmd = new Command(command, args);
-    if (cwd) cmd.cwd(cwd);
+    const cmd = Command.create(command, args, cwd ? { cwd } : undefined);
     const output = await cmd.execute();
     return {
       stdout: output.stdout,
@@ -318,11 +326,15 @@ export const shell = {
     };
   },
 
-  async *streamCommand(command: string, args: string[], cwd?: string): AsyncGenerator<CommandEvent> {
-    const cmd = new Command(command, args);
-    if (cwd) cmd.cwd(cwd);
-    for await (const event of cmd.stream()) {
-      yield event;
+  async *streamCommand(command: string, args: string[], cwd?: string): AsyncGenerator<unknown> {
+    const cmd = Command.create(command, args, cwd ? { cwd } : undefined);
+    const output = await cmd.execute();
+    // Simulate streaming by yielding the output
+    if (output.stdout) {
+      yield { type: 'stdout', payload: output.stdout };
+    }
+    if (output.stderr) {
+      yield { type: 'stderr', payload: output.stderr };
     }
   },
 };

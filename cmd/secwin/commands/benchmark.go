@@ -36,6 +36,7 @@ func newBenchmarkRunCommand() *cobra.Command {
 		includeInstall bool
 		includeWSL     bool
 		outputDir      string
+		variables      []string
 	)
 
 	cmd := &cobra.Command{
@@ -47,6 +48,15 @@ func newBenchmarkRunCommand() *cobra.Command {
 			}
 			if err := os.MkdirAll(outputDir, 0755); err != nil {
 				return err
+			}
+
+			// Parse variables
+			vars := make(map[string]string)
+			for _, v := range variables {
+				parts := strings.SplitN(v, "=", 2)
+				if len(parts) == 2 {
+					vars[parts[0]] = parts[1]
+				}
 			}
 
 			loader := manifest.NewLoader("manifests", "manifests/custom")
@@ -66,6 +76,7 @@ func newBenchmarkRunCommand() *cobra.Command {
 				IncludeInstall:  includeInstall,
 				IncludeWSL:      includeWSL,
 				OutputDir:       outputDir,
+				Variables:       vars,
 			}, loader, reg, wslManager)
 
 			if len(runner.GetResults().Config.Playbooks) == 0 {
@@ -105,6 +116,7 @@ func newBenchmarkRunCommand() *cobra.Command {
 	cmd.Flags().BoolVar(&includeInstall, "include-install", false, "Include tool installation time")
 	cmd.Flags().BoolVar(&includeWSL, "include-wsl", true, "Test WSL execution paths")
 	cmd.Flags().StringVarP(&outputDir, "output", "o", "", "Output directory")
+	cmd.Flags().StringSliceVar(&variables, "var", nil, "Variables to pass to playbooks (key=value)")
 
 	return cmd
 }

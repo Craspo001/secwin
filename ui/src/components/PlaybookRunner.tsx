@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { Play, Stop, RotateCcw, FileText, Code, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2, AlertTriangle, Terminal } from 'lucide-react';
-import { usePlaybooks, usePlaybook, useRunPlaybook, useSystemStatus } from '../hooks/useSecWin';
-import { cn, formatDuration, formatDate } from '../lib/utils';
+import { Play, RotateCcw, FileText, ChevronDown, CheckCircle, XCircle, Loader2, Terminal } from 'lucide-react';
+import { usePlaybooks, usePlaybook, useRunPlaybook } from '../hooks/useSecWin';
+import { cn, formatDuration } from '../lib/utils';
 
 export function PlaybookRunner() {
   const { playbooks, loading: playbooksLoading, reload: reloadPlaybooks } = usePlaybooks();
   const [selectedPlaybook, setSelectedPlaybook] = useState<string>('');
-  const { playbook, loading: pbLoading, error: pbError } = usePlaybook(selectedPlaybook);
+  const { playbook } = usePlaybook(selectedPlaybook);
   const { run, running, result, error: runError, progress } = useRunPlaybook();
-  const { status } = useSystemStatus();
   const [variables, setVariables] = useState<Record<string, string>>({});
   const [output, setOutput] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'config' | 'run' | 'results'>('config');
@@ -38,18 +37,6 @@ export function PlaybookRunner() {
     if (variable.enum?.length) return variable.enum[0];
     return '';
   };
-
-  const initializeVariables = () => {
-    if (!playbook) return;
-    const defaults: Record<string, string> = {};
-    Object.entries(playbook.variables).forEach(([key, variable]) => {
-      defaults[key] = getDefaultValue(variable);
-    });
-    setVariables(defaults);
-  };
-
-  // Initialize variables when playbook changes
-  // Note: In a real app, use useEffect for this
 
   return (
     <div className="space-y-6">

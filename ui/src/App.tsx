@@ -4,7 +4,7 @@ import { PlaybookRunner } from './components/PlaybookRunner';
 import { ProfileManager } from './components/ProfileManager';
 import { EvidenceViewer } from './components/EvidenceViewer';
 import { FindingsDashboard } from './components/FindingsDashboard';
-import { Settings } from './components/Settings';
+import { SettingsComponent } from './components/Settings';
 import { Dashboard } from './components/Dashboard';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
         <Route path="/profiles" element={<ProfileManager />} />
         <Route path="/evidence" element={<EvidenceViewer />} />
         <Route path="/findings" element={<FindingsDashboard />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings" element={<SettingsComponent />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

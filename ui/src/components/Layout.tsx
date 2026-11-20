@@ -17,7 +17,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex min-h-screen bg-background">
       <aside
         className={cn(
           'fixed left-0 top-0 z-40 h-full border-r border-border bg-card transition-all duration-300',
